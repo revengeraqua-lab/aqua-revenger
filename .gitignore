@@ -6,7 +6,6 @@ test-results/
 .build/
 .env
 .env.*
-!.env.example
 *.sqlite3
 *.sqlite3-*
 enquiries.csv
@@ -14,7 +13,7 @@ Thumbs.db
 desktop.ini
 public/
 .vercel/
-!.env.example
 
 .vercel
 .env*
+!.env.example
