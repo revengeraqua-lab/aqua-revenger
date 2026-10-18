@@ -18,7 +18,7 @@ PRODUCTS = [
 
 def create_app(database=None):
     serverless = os.environ.get("VERCEL") == "1"
-    app = Flask(__name__, static_folder=None if serverless else "static")
+    app = Flask(__name__, static_folder=None if serverless else "public/static", static_url_path="/static")
     if serverless:
         # URLs remain /static/*; public/static is served by Vercel's CDN.
         app.add_url_rule("/static/<path:filename>", endpoint="static", build_only=True)

@@ -7,7 +7,9 @@ BASE = Path(__file__).resolve().parent
 
 def build_assets(destination=None):
     target = Path(destination) if destination else BASE / "public" / "static"
-    copytree(BASE / "static", target, dirs_exist_ok=True)
+    if target.resolve() == (BASE / "public" / "static").resolve():
+        return target
+    copytree(BASE / "public" / "static", target, dirs_exist_ok=True)
     return target
 
 
