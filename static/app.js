@@ -30,10 +30,11 @@
   $$('dialog').forEach(dialog=>{dialog.addEventListener('close',()=>{document.body.style.overflow='';});dialog.querySelector('.close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});});
   $('.bag-button').onclick=()=>openDialog('#bag-dialog');
   $('.continue-shopping').onclick=()=>$('#bag-dialog').close();
-  function enquiry(kind) { $('#enquiry-form').reset(); $('#form-status').textContent='';$('#form-status').className='';const submit=$('#enquiry-form button[type=submit]');submit.disabled=false;submit.innerHTML='Send enquiry <span>↗</span>';$('#enquiry-form select').value=kind;openDialog('#enquiry-dialog'); }
+  function enquiry(kind) { $('#enquiry-form').reset(); $('#form-status').textContent='';$('#form-status').className='';const submit=$('#enquiry-form button[type=submit]');submit.disabled=$('#enquiry-form').dataset.available==='false';submit.innerHTML='Send enquiry <span>↗</span>';$('#enquiry-form select').value=kind;openDialog('#enquiry-dialog'); }
   $$('.partner-button').forEach(button=>button.onclick=()=>enquiry('distributor'));
   $('#enquire-order').onclick=()=>enquiry('order');
   $('#privacy-button').onclick=()=>openDialog('#privacy-dialog');
+  if ($('#enquiry-form').dataset.available === 'false') $('#enquiry-form').querySelectorAll('input,select,textarea,button[type=submit]').forEach(control=>{control.disabled=true;});
   $('#enquiry-form').addEventListener('submit',async event=>{
     event.preventDefault();const form=event.currentTarget;const button=form.querySelector('[type=submit]');const status=$('#form-status');
     const data=Object.fromEntries(new FormData(form));data.items=data.kind==='order'?Object.entries(bag).map(([id,quantity])=>({id,quantity})):[];

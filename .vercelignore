@@ -1,0 +1,11 @@
+.git
+.build
+.venv
+__pycache__
+instance
+test-results
+tests
+.env*
+*.sqlite3
+*.sqlite3-*
+enquiries.csv

@@ -12,3 +12,9 @@ test-results/
 enquiries.csv
 Thumbs.db
 desktop.ini
+public/
+.vercel/
+!.env.example
+
+.vercel
+.env*

@@ -11,6 +11,16 @@ python app.py
 
 Open http://127.0.0.1:5000. `PORT` can override port 5000. Waitress serves the app with Flask debug mode disabled.
 
+## Vercel deployment
+
+Import the repository with the **Flask** preset and repository root `./`. `vercel.json` runs `python build.py`, which copies the source assets into `public/static` for Vercel's CDN. The Flask entrypoint is `app.py`.
+
+The application performs no filesystem writes or database connections during startup. Local development stores enquiries in SQLite, initialized on first use. On Vercel, connect a persistent PostgreSQL database and set `DATABASE_URL` (or `POSTGRES_URL`) in the project's environment variables, then redeploy. Do not use local SQLite or `/tmp` as persistent production storage.
+
+Without a production database, the website and animations stay available, while enquiry forms display an unavailable notice and cannot submit. The API returns HTTP 503 rather than pretending to save customer details. `/api/health` reports the application's startup status and whether enquiry storage is configured; it does not expose credentials or test the database connection.
+
+Vercel setup follows the [Flask deployment documentation](https://vercel.com/docs/frameworks/backend/flask). Copy `.env.example` only for local configuration; add the actual database URL privately through Vercel settings.
+
 ## Features
 
 - Responsive brand story and four product formats

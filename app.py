@@ -1,12 +1,11 @@
 import os
 import re
-import sqlite3
 import uuid
-from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, jsonify, render_template, request
+from storage import StorageUnavailable, save_enquiry
 
 BASE = Path(__file__).resolve().parent
 PRODUCTS = [
@@ -18,16 +17,22 @@ PRODUCTS = [
 
 
 def create_app(database=None):
-    app = Flask(__name__)
-    app.config.update(DATABASE=str(database or BASE / "instance" / "revenger.sqlite3"), MAX_CONTENT_LENGTH=32 * 1024)
-    Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
-    with closing(sqlite3.connect(app.config["DATABASE"])) as db:
-        db.execute("CREATE TABLE IF NOT EXISTS enquiries (reference TEXT PRIMARY KEY, created_at TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT, city TEXT NOT NULL, kind TEXT NOT NULL, message TEXT, items TEXT)")
-        db.commit()
+    serverless = os.environ.get("VERCEL") == "1"
+    app = Flask(__name__, static_folder=None if serverless else "static")
+    if serverless:
+        # URLs remain /static/*; public/static is served by Vercel's CDN.
+        app.add_url_rule("/static/<path:filename>", endpoint="static", build_only=True)
+    database_url = None if database is not None else (os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL"))
+    database_path = str(database) if database is not None else (None if serverless else str(BASE / "instance" / "revenger.sqlite3"))
+    app.config.update(DATABASE=database_path, DATABASE_URL=database_url, MAX_CONTENT_LENGTH=32 * 1024)
 
     @app.get("/")
     def home():
-        return render_template("index.html", products=PRODUCTS)
+        return render_template("index.html", products=PRODUCTS, enquiries_available=bool(app.config["DATABASE_URL"] or app.config["DATABASE"]))
+
+    @app.get("/api/health")
+    def health():
+        return jsonify(status="ok", enquiries="configured" if app.config["DATABASE_URL"] or app.config["DATABASE"] else "unconfigured")
 
     @app.get("/api/products")
     def products():
@@ -64,9 +69,11 @@ def create_app(database=None):
         if fields["kind"] == "order" and not clean_items:
             return jsonify(error="Add a case to your bag first."), 400
         reference = "RV-" + uuid.uuid4().hex[:10].upper()
-        with closing(sqlite3.connect(app.config["DATABASE"])) as db:
-            db.execute("INSERT INTO enquiries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (reference, datetime.now(timezone.utc).isoformat(), fields["name"], fields["phone"], fields["email"], fields["city"], fields["kind"], fields["message"], json.dumps(clean_items)))
-            db.commit()
+        try:
+            save_enquiry(app.config, (reference, datetime.now(timezone.utc).isoformat(), fields["name"], fields["phone"], fields["email"], fields["city"], fields["kind"], fields["message"], json.dumps(clean_items)))
+        except StorageUnavailable:
+            app.logger.error("Enquiry storage unavailable; no enquiry was saved.")
+            return jsonify(error="Online enquiries are temporarily unavailable. Please try again later."), 503
         return jsonify(reference=reference, message="Your enquiry has been saved. Keep your reference for follow-up."), 201
 
     @app.after_request
