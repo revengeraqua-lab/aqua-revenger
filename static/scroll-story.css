@@ -1,0 +1,51 @@
+.scroll-story{height:560svh;position:relative;background:#06392e}
+.story-stage.hero{--story-ink:#f5f5ed;--story-accent:#e1ebaf;height:100svh;min-height:560px;max-height:none;position:sticky;top:0;display:block;padding:0;overflow:hidden;background:#06392e;isolation:isolate;color:var(--story-ink)}
+.story-stage[data-scene=light]{--story-ink:#123f32;--story-accent:#456b37}
+.scene-canvas,.scene-fallback{position:absolute;inset:0;z-index:1;pointer-events:none}
+.scene-canvas canvas{display:block;width:100%;height:100%;outline:none}
+.scene-fallback{transition:opacity .4s;background:linear-gradient(90deg,#052d25a8,#052d2530),url('/static/images/forest-stream.png') center/cover}
+.is-webgl-ready .scene-fallback{opacity:0;visibility:hidden}
+.scene-fallback .hero-bottle{left:70%;top:52%;animation:none;translate:none;transform:translate(-50%,-50%) rotate(var(--bottle-tilt,-9deg));filter:drop-shadow(15px 26px 20px #001d2180)}
+.scene-fallback .bottle-cap{animation:none!important;transition:none;transform:translateY(calc(-1 * var(--cap-lift,0px)))}
+.scene-fallback .water-splash{display:none}
+.story-stage .hero-grain{z-index:2;opacity:.025}
+.story-stage:before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,#02291f 0%,#02291f66 38%,transparent 76%);opacity:calc(var(--roots-visibility,1)*.85);pointer-events:none}
+.story-stage:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 120px #001c2212;pointer-events:none;z-index:2}
+.story-copy{position:absolute;left:7%;top:23%;width:43%;max-width:650px;z-index:3;opacity:0;visibility:hidden;pointer-events:none;will-change:opacity,transform}
+.story-copy.is-active{opacity:1;visibility:visible;pointer-events:auto}
+.story-copy .eyebrow{font-size:8px;letter-spacing:1.9px;color:var(--story-ink);opacity:.75;margin-bottom:27px;font-weight:500;display:block}
+.story-copy h1,.story-copy h2{font-family:var(--display);font-size:clamp(60px,6.1vw,94px);line-height:1.06;letter-spacing:-4.2px;font-weight:500;color:var(--story-ink);margin:0 0 25px}
+.story-copy h1 em,.story-copy h2 em{font-family:Georgia,serif;color:var(--story-accent);letter-spacing:-3px}
+.story-copy>p:not(.eyebrow){max-width:355px;font-size:13px;line-height:1.85;color:var(--story-ink);opacity:.85;font-weight:400;margin-bottom:29px}
+.story-company{display:flex;gap:14px;align-items:center;margin-top:30px;font:25px Georgia,serif;letter-spacing:-.6px;color:#e5e9ce}
+.company-seed{border:1px solid #d9dfad77;border-radius:50%;width:44px;height:44px;display:grid;place-items:center;font-size:32px}
+.story-company small{display:block;font:7px var(--sans);letter-spacing:2.4px;margin-top:7px}
+.story-copy>.story-cue{font-size:9px!important;letter-spacing:.6px;opacity:.65!important;margin-top:31px}
+.story-detail{font-size:8px;letter-spacing:1.7px;opacity:.65;border-top:1px solid currentColor;padding-top:18px;display:inline-block;margin-top:8px}
+.story-copy .button{font-size:11px;padding:16px 21px;background:var(--green);color:var(--ivory)}
+.story-formats{display:flex;gap:9px;margin:0 0 26px}
+.story-formats span{border:1px solid #849a7b66;border-radius:20px;padding:8px 12px;font-size:9px;white-space:nowrap}
+.story-topline{position:absolute;top:33px;left:5%;right:5%;display:flex;justify-content:space-between;align-items:center;z-index:4;color:var(--story-ink)}
+.story-brand{font:italic bold 30px Georgia,serif;letter-spacing:-1.7px}
+.story-brand small{font:6px var(--sans);letter-spacing:1.9px;display:block;margin-top:7px}
+.story-skip{font-size:8px;letter-spacing:.6px;border-bottom:1px solid currentColor;padding-bottom:6px;opacity:.8}
+.story-caption{position:absolute;right:6%;bottom:17%;z-index:3;color:var(--story-ink);font:8px var(--sans);letter-spacing:2px;opacity:.55;pointer-events:none;writing-mode:vertical-rl}
+.story-bottom{position:absolute;left:5%;right:5%;bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:25px;z-index:4;color:var(--story-ink)}
+.story-scroll-hint{display:flex;gap:12px;align-items:center;font-size:7px;letter-spacing:1.7px;white-space:nowrap}
+.story-scroll-hint span{font-size:17px;display:grid;place-items:center;width:27px;height:36px;border:1px solid currentColor;border-radius:20px;opacity:.65}
+.story-timeline{flex:1;max-width:370px;display:grid;grid-template-columns:38px 1fr;gap:8px 14px;align-items:center}
+.chapter-count{font-size:7px;letter-spacing:1px;grid-row:1/3}
+.chapter-number{font-size:19px;color:var(--story-ink);font-weight:400;display:block;margin-bottom:3px}
+.story-steps{display:flex;justify-content:space-between;gap:10px;font-size:6px;letter-spacing:1px}
+.story-steps span{opacity:.4}.story-steps span.active{opacity:1}
+.story-progress{height:1px;background:#849a7b55;position:relative;overflow:hidden}
+.story-progress:after{content:'';position:absolute;inset:0;background:var(--story-ink);transform-origin:left;transform:scaleX(var(--story-progress,0))}
+.story-bottom .motion-toggle{white-space:nowrap;color:var(--story-ink)}
+.water-still{max-width:340px;width:100%;height:450px;position:relative;justify-self:center;border-radius:50% 50% 3px 3px;background:radial-gradient(ellipse,#fcfff6,#e0e9d8);overflow:hidden}
+.water-still .bottle-model{position:absolute;width:134px;left:50%;top:48%;transform:translate(-50%,-50%) rotate(10deg);filter:drop-shadow(16px 17px 8px #214c3330)}
+.water-still>span{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:8px;letter-spacing:1.7px}
+@media(max-width:1100px){.story-copy{left:6%;width:44%;top:25%}.story-copy h1,.story-copy h2{font-size:68px;letter-spacing:-3.6px}.story-copy[data-copy='5'] h2{font-size:57px}.story-company{font-size:22px}}
+@media(max-width:900px){.scroll-story{height:500svh}.story-stage.hero{min-height:600px;height:100svh}.story-copy{left:7%;right:7%;width:auto;max-width:none;top:12%}.story-copy h1,.story-copy h2{font-size:clamp(40px,10.8vw,60px);line-height:1.03;letter-spacing:-2.5px;margin-bottom:16px}.story-copy[data-copy='5'] h2{font-size:clamp(35px,9.6vw,54px)}.story-copy h1 em,.story-copy h2 em{letter-spacing:-2px}.story-copy .eyebrow{font-size:6px;letter-spacing:1.2px;margin-bottom:18px}.story-copy>p:not(.eyebrow){font-size:10px;line-height:1.75;max-width:245px;margin-bottom:18px}.story-company{font-size:19px;margin-top:20px;gap:10px}.story-company small{font-size:5px;letter-spacing:1.9px}.company-seed{width:33px;height:33px;font-size:25px}.story-copy>.story-cue{font-size:8px!important;margin-top:23px}.story-detail{font-size:6px;letter-spacing:1.1px;padding-top:12px;margin-top:0}.story-copy .button{font-size:9px;padding:12px 16px;gap:20px}.story-formats{gap:6px;margin-bottom:18px}.story-formats span{font-size:7px;padding:6px 10px}.story-topline{top:23px;left:7%;right:7%}.story-brand{font-size:23px;letter-spacing:-1.1px}.story-brand small{font-size:4px;letter-spacing:1.5px;margin-top:5px}.story-skip{font-size:6px;letter-spacing:.3px}.story-caption{font-size:6px;right:5%;bottom:18%;letter-spacing:1.5px}.story-bottom{left:7%;right:7%;bottom:20px;gap:15px}.story-scroll-hint{font-size:5px;letter-spacing:.8px;gap:7px}.story-scroll-hint span{width:22px;height:30px;font-size:13px}.story-timeline{max-width:150px;gap:7px 8px;grid-template-columns:25px 1fr}.chapter-number{font-size:15px}.chapter-count{font-size:6px}.story-steps{font-size:6px;letter-spacing:1px}.story-steps span:not(.active){display:none}.story-bottom .motion-toggle span{display:none}.story-bottom .motion-toggle{font-size:11px;padding:6px}.scene-fallback .hero-bottle{left:51%;top:64%;width:130px}.water-still{max-width:340px;margin:35px auto;height:430px}}
+@media(max-height:720px) and (min-width:901px){.story-copy{top:22%}.story-copy h1,.story-copy h2{font-size:62px}.story-copy>p:not(.eyebrow){font-size:12px;margin-bottom:20px}.story-copy .eyebrow{margin-bottom:20px}.story-stage.hero{min-height:540px}.story-company{margin-top:20px;font-size:21px}.story-copy>.story-cue{margin-top:20px}}
+@media(max-width:350px){.story-copy{top:12%}.story-copy h1,.story-copy h2{font-size:37px}.story-copy>p:not(.eyebrow){font-size:9px;max-width:210px}.story-copy .button{font-size:8px}.story-scroll-hint{max-width:90px}.story-timeline{max-width:125px}.story-copy[data-copy='5'] h2{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.scroll-story{height:auto}.story-stage.hero{position:relative}.story-timeline,.story-scroll-hint{display:none}.story-bottom{justify-content:flex-end}.scene-fallback .hero-bottle{transform:translate(-50%,-50%) rotate(-8deg)}}
