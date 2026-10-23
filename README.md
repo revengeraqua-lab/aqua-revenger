@@ -15,7 +15,11 @@ Open http://127.0.0.1:5000. Python 3.11+ is supported. No Node build is needed. 
 
 `content.py` contains approved company facts, leadership biographies, the water/soda/jeera/lemon portfolio, two office addresses, ten service areas, and page titles/descriptions. `templates/brand.html` renders all six pages. `public/static/brand.css` and `brand.js` provide the responsive design and lightweight interactions. The homepage includes the cinematic Three.js / GSAP scroll story: full-screen water introduction with gentle refraction, bottle reveal, opening cap, water pouring into a glass and brand finale. The homepage header starts transparent over the water and becomes a compact white fixed navigation on scroll. Other pages load only the portfolio styles and interactions.
 
-Leadership includes the client-supplied portraits of Subir Banerjee (Managing Director) and Rakesh Salve (Chief Executive Officer), with their existing biographies. Bottle artwork is the earlier local site asset. Additional product artwork can be integrated when supplied as accessible image files. Do not infer certifications or product sizes from promotional images.
+Leadership includes the client-supplied portraits of Subir Banerjee (Managing Director) and Rakesh Salve (Chief Executive Officer), with their existing biographies. The catalogue adds generated Revenger product concept artwork for water, soda, jeera soda and lemon soda; see `ASSETS.md`. Do not infer certifications or final packaging specifications from these visuals.
+
+Water enquiry cards restore the four existing formats (250 ml, 500 ml, 1 litre and 2 litres). Visitors choose a bottle quantity, then continue to Contact with their product, size and quantity prefilled. Beverage cards offer quantity enquiries without inventing unconfirmed capacities. The client requested no prices; no prices, case counts or checkout are displayed. Final formats and availability are confirmed by the company.
+
+The shared footer includes the leaf wordmark, navigation, service areas, direct telephone/email and office map links, plus the linked "Designed and developed by dipanshudev.com" credit. The strip above navigation is removed from every page. Cards use one-time scroll entrances and subtle hover feedback, respecting reduced motion; the cinematic homepage is retained. `REFERENCES.md` documents the REA Bisleri layout inspection.
 
 ## Deployment
 
@@ -34,10 +38,12 @@ The existing `/api/enquiries` API and local management tool remain for compatibi
 ```powershell
 python -m unittest discover -s tests -v
 python tests/browser_check.py
+python tests/catalogue_check.py
 python tests/browser_check.py https://revenger-397n.vercel.app
+python tests/catalogue_check.py https://revenger-397n.vercel.app
 ```
 
-Browser verification uses the installed Chrome executable through Playwright in an isolated profile. It checks 3D rendering, scroll chapters, cap opening, pouring, reverse scroll, pause/resume, reduced motion, all pages, metadata, responsive widths, navigation and contact prefills. No email is sent.
+Browser verification uses the installed Chrome executable through Playwright in an isolated profile. It checks 3D rendering, scroll chapters, cap opening, pouring, reverse scroll, pause/resume, reduced motion, all pages, metadata, responsive widths, navigation and contact prefills. The catalogue check also verifies all seven product images, the footer credit, quantity bounds and size/quantity enquiry prefills. No email is sent.
 
 
 ## Interactive bottle

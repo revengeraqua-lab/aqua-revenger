@@ -24,3 +24,16 @@ The capture completed without page errors. Keyboard PageDown did not establish t
 - Copy explicitly names GangaShree Roots Private Limited and introduces Revenger as packaged drinking water. The forest is atmospheric artwork, not a claim about the source of the water.
 
 Local photographs/concept artwork remain documented in `ASSETS.md`. Three.js and GSAP are self-hosted under `static/vendor`, with their upstream notices retained.
+
+## Product catalogue reference - 23 October 2026
+
+- Bisleri product range: https://www.bisleri.com/products
+- Product detail inspected: https://www.bisleri.com/bisleri-water-bottles/BISW-1LTR12-240.html
+
+REA `capture_browser_scenario` opened the detail page in isolated headless Chrome at 1440 x 1000. Its accessibility capture showed bottle, label, case and rear-label image views, the product format, quantity decrement/increment controls and grouped footer links.
+
+Evidence ID: `ev_148a267c3eef96218ddec499f6b26fa9b6ee2d852d014fed54a3adb9704e32a4`.
+
+This was a read-only layout study; checkout and quantity interactions on Bisleri were not tested. The reference capture reported third-party script errors involving `$`, `initMap` and `initialised`. No reference code, product photography, logos or commercial terms were copied.
+
+Revenger uses the general idea of clear product imagery, size information and quantity controls in its own emerald/gold design. The client requested no prices, so no pricing or cart flow is displayed. Water-format and beverage enquiry controls carry the chosen product, preferred size where applicable, and bottle quantity to the contact composer. New product concept artwork is documented in `ASSETS.md`.

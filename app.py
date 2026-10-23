@@ -54,7 +54,7 @@ def create_app(database=None):
             graph.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": origin + "/"}, {"@type": "ListItem", "position": 2, "name": page["label"], "item": canonical}]})
         return render_template("brand.html", key=key, page=page, pages=PAGES, company=COMPANY,
             phone=PHONE, email=EMAIL, regions=REGIONS, offices=OFFICES, values=VALUES,
-            portfolio=PORTFOLIO, leaders=leaders, canonical=canonical,
+            portfolio=PORTFOLIO, water_formats=PRODUCTS, leaders=leaders, canonical=canonical,
             share_image=origin + "/static/images/revenger-bottle-real.png",
             schema={"@context": "https://schema.org", "@graph": graph},
             map_url=lambda office: "https://www.google.com/maps/search/?" + urlencode({"api": 1, "query": office["street"] + ", " + office["city"] + ", " + office["pin"]}))

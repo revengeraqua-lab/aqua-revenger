@@ -45,8 +45,8 @@ Google ignores meta-keywords; target terms belong in useful visible copy, titles
 1. Finalize a brand-owned domain. Set `SITE_URL=https://your-domain` in Vercel and redeploy; it controls all canonical, share, schema and sitemap URLs. Redirect the old domain to the final one.
 2. Verify ownership in Google Search Console, submit `/sitemap.xml`, inspect the six URLs and request indexing where appropriate. Indexing is not automatic or guaranteed.
 3. Create/complete eligible Google Business Profiles with consistent company name, real address, phone, categories and genuine business hours. Confirm whether customers can visit each office before publishing visiting hours or a storefront claim.
-4. Add original leadership, plant and actual product/label photography when provided. Current bottle artwork is the earlier site asset, not a verified label/specification photo. The newly supplied chat bottle and product-range images need local files before replacing that asset. Client-supplied leadership portraits were added on 23 October 2026.
-5. Confirm actual sizes, pack quantities, specifications, factory address and credentials before adding them. Avoid unsupported mineral-water, purity-test, spring-source or health claims.
+4. Add original plant and actual product/label photography when provided. Current bottle and catalogue artwork are generated brand concepts, not verified label/specification photos; provenance is in `ASSETS.md`. Client-supplied leadership portraits were added on 23 October 2026.
+5. The client requested restoration of the existing 250 ml, 500 ml, 1 litre and 2 litre water formats for size/quantity enquiries. The company confirms final formats and local availability. No prices, case counts or unconfirmed beverage capacities are displayed. Confirm specifications, factory address and credentials before adding them. Avoid unsupported mineral-water, purity-test, spring-source or health claims.
 6. Maintain business listings, earn authentic customer reviews and track city-level organic enquiries in Search Console. Do not buy reviews or publish duplicate city pages with swapped place names.
 
 Google explains local visibility in terms of relevance, distance and prominence, not title tags alone:
@@ -59,4 +59,4 @@ https://developers.google.com/search/docs/appearance/structured-data/local-busin
 ## Asset / contact notes
 
 Official contact from client: +91 8169456633, GangaShreeroots@gmail.com. The WhatsApp message sender number is not used as the company contact. No WhatsApp capability is assumed for the official number.
-Leadership profiles use the client-supplied portraits of Subir Banerjee and Rakesh Salve. No stock face is presented as a real executive. Product flavour graphics are decorative type compositions, not packaging photographs.
+Leadership profiles use the client-supplied portraits of Subir Banerjee and Rakesh Salve. No stock face is presented as a real executive. Product images are generated Revenger concept artwork, labelled as artwork on the catalogue page; they do not establish final packaging specifications.
