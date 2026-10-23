@@ -30,7 +30,7 @@ def create_app(database=None):
     app.config.update(DATABASE=database_path, DATABASE_URL=database_url, MAX_CONTENT_LENGTH=32 * 1024)
 
     # Use an explicit origin so canonical URLs cannot be changed by a Host header.
-    origin = os.environ.get("SITE_URL", "https://revenger-397n.vercel.app").rstrip("/")
+    origin = (os.environ.get("SITE_URL") or "https://revenger.co.in").rstrip("/")
 
     def brand_page(key):
         page = PAGES[key]

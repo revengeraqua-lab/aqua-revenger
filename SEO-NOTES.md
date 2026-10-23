@@ -42,7 +42,7 @@ Google ignores meta-keywords; target terms belong in useful visible copy, titles
 
 ## What remains outside the code
 
-1. Finalize a brand-owned domain. Set `SITE_URL=https://your-domain` in Vercel and redeploy; it controls all canonical, share, schema and sitemap URLs. Redirect the old domain to the final one.
+1. Production domain: `https://revenger.co.in`. The app default and Vercel production `SITE_URL` use this origin for canonical, share, schema, robots.txt and sitemap URLs. The earlier Vercel origin caused Search Console's "URL not allowed" error when the sitemap was submitted on the brand domain; all six sitemap entries now use the brand origin. After deployment, resubmit `https://revenger.co.in/sitemap.xml` in the matching Search Console property.
 2. Verify ownership in Google Search Console, submit `/sitemap.xml`, inspect the six URLs and request indexing where appropriate. Indexing is not automatic or guaranteed.
 3. Create/complete eligible Google Business Profiles with consistent company name, real address, phone, categories and genuine business hours. Confirm whether customers can visit each office before publishing visiting hours or a storefront claim.
 4. Add original plant and actual product/label photography when provided. Current bottle and catalogue artwork are generated brand concepts, not verified label/specification photos; provenance is in `ASSETS.md`. Client-supplied leadership portraits were added on 23 October 2026.

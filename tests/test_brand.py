@@ -1,4 +1,5 @@
 import json,re,unittest
+from unittest.mock import patch
 from html.parser import HTMLParser
 from xml.etree import ElementTree
 from app import create_app
@@ -20,7 +21,8 @@ class BrandTests(unittest.TestCase):
                 html=r.data.decode('utf-8-sig');m=Metadata();m.feed(html)
                 self.assertEqual(m.h1,1);self.assertEqual(m.meta['description'],page['description'])
                 self.assertEqual(m.meta['google-site-verification'],'JXDHFEyrgIf-oBW4D--vTRlSq3RV4mFEZV3dvApucmc')
-                self.assertEqual(m.canonical,'https://revenger-397n.vercel.app'+page['path'])
+                self.assertEqual(m.canonical,'https://revenger.co.in'+page['path'])
+                self.assertEqual(m.meta['og:url'],m.canonical)
                 schema=json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>',html,re.S).group(1))
                 self.assertEqual(schema['@graph'][0]['telephone'],'+918169456633')
                 self.assertEqual(len(schema['@graph'][0]['areaServed']),10)
@@ -29,8 +31,18 @@ class BrandTests(unittest.TestCase):
     def test_crawl_files(self):
         r=self.client.get('/sitemap.xml');self.assertEqual(r.status_code,200)
         root=ElementTree.fromstring(r.data);self.assertEqual(len(root),6)
-        self.assertIn(b'/sitemap.xml',self.client.get('/robots.txt').data)
+        urls=[node.find('{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text for node in root]
+        self.assertEqual(urls,['https://revenger.co.in'+p['path'] for p in PAGES.values()])
+        self.assertIn(b'Sitemap: https://revenger.co.in/sitemap.xml',self.client.get('/robots.txt').data)
         self.assertEqual(self.client.get('/unknown').status_code,404)
+    def test_origin_override_is_consistent_and_not_taken_from_host_header(self):
+        with patch.dict('os.environ',{'SITE_URL':'https://preview.example.com/'}):
+            client=create_app().test_client()
+        html=client.get('/company',headers={'Host':'untrusted.example'}).data.decode('utf-8-sig')
+        meta=Metadata();meta.feed(html)
+        self.assertEqual(meta.canonical,'https://preview.example.com/company')
+        self.assertIn(b'https://preview.example.com/company',client.get('/sitemap.xml').data)
+        self.assertIn(b'Sitemap: https://preview.example.com/sitemap.xml',client.get('/robots.txt').data)
     def test_verified_content(self):
         company=self.client.get('/company').data
         for text in ('Subir Banerjee','Rakesh Salve','Managing Director','Chief Executive Officer'):self.assertIn(text.encode(),company)

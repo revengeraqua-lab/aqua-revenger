@@ -25,7 +25,7 @@ The compact shared footer includes the leaf wordmark, two-column navigation, dir
 
 Import with the Flask preset and repository root `./`. Entry point: `app.py`. `public/static` is served by Vercel's CDN. The app never creates a SQLite file at startup.
 
-Set `SITE_URL` to the final brand domain, including https but no trailing slash. Default: https://revenger-397n.vercel.app. This controls canonical URLs, structured data and the sitemap. See `SEO-NOTES.md` for research and search-launch steps.
+The production origin is `https://revenger.co.in`. `SITE_URL` defaults to this brand domain and is explicitly configured in Vercel production. It controls all canonical URLs, Open Graph/share URLs, structured data, robots.txt and the six-page sitemap. Keep it aligned with the Search Console property. An override must include https. See `SEO-NOTES.md` for research and search-launch steps.
 
 Contact actions use the confirmed telephone and email. The composer opens an email draft and does not submit or store visitor data. Email is only sent when the visitor sends it using their mail app.
 
