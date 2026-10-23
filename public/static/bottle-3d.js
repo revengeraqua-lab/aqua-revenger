@@ -43,10 +43,13 @@ export function makeBottle(environment) {
     const a=i/5*Math.PI*2;
     foot.scale.set(1,.58,1);foot.position.set(Math.sin(a)*.39,-2.24,Math.cos(a)*.39);bottle.add(foot);
   }
-  for(const y of [2.09,2.17,2.25,2.32]) {
-    const thread=new THREE.Mesh(new THREE.TorusGeometry(.254,.018,8,64),plastic);
-    thread.rotation.x=Math.PI/2;thread.position.y=y;bottle.add(thread);
+  // A continuous spiral thread, rather than separate stacked rings.
+  const threadPoints=[];
+  for(let i=0;i<=160;i++) {
+    const t=i/160,angle=t*Math.PI*5;
+    threadPoints.push(new THREE.Vector3(Math.sin(angle)*.254,2.075+t*.25,Math.cos(angle)*.254));
   }
+  bottle.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(threadPoints),160,.014,8,false),plastic));
   const collar=new THREE.Mesh(new THREE.TorusGeometry(.28,.025,10,64),plastic);
   collar.rotation.x=Math.PI/2;collar.position.y=2.04;bottle.add(collar);
 
@@ -69,7 +72,9 @@ export function makeBottle(environment) {
   }
 
   const cap=new THREE.Group();
-  const capBody=new THREE.Mesh(new THREE.CylinderGeometry(.289,.296,.32,64),emerald);
+  // Molded cap: a closed crown with an open underside and an inner skirt.
+  const capProfile=[[.005,.18],[.275,.18],[.289,.15],[.296,-.16],[.261,-.16],[.258,.13],[.005,.13]].map(([r,y])=>new THREE.Vector2(r,y));
+  const capBody=new THREE.Mesh(new THREE.LatheGeometry(capProfile,80),emerald);
   cap.add(capBody);
   const capTop=new THREE.Mesh(new THREE.CylinderGeometry(.27,.287,.035,64),emerald);
   capTop.position.y=.169;cap.add(capTop);

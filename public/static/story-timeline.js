@@ -12,7 +12,7 @@ export function createStoryTimeline() {
     .to(state,{turn:-.09,duration:10},28)
     .addLabel('open',39)
     .to(state,{paper:0,zoom:1,turn:.02,duration:9},'open')
-    .to(state,{open:1,duration:10},43)
+    .to(state,{open:1,duration:12,ease:'none'},43)
     .addLabel('refresh',59)
     .to(state,{zoom:0,tilt:1,glass:1,duration:10},'refresh')
     .to(state,{flow:1,duration:4},68)

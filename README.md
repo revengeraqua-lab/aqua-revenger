@@ -43,3 +43,6 @@ Browser verification uses the installed Chrome executable through Playwright in 
 ## Interactive bottle
 
 When the bottle is visible, hold the right or left mouse button on the scene and drag horizontally for a full 360-degree turn. On touch devices, swipe horizontally; vertical swipes still scroll the story. Focus the canvas and use Left/Right arrows to rotate, Home or the Reset view button to restore the view. The closed cap follows the bottle orientation; the detached cap is framed below the actual header height with a safety margin, including short desktop screens.
+
+
+The cap opening is choreographed in `public/static/cap-motion.js`: continuous screw rotation with a matching axial rise, a separate vertical clearance lift, then a smooth arc to the parked position. Its orientation blend excludes the screw rotation so multiple turns remain continuous in either scroll direction. The cap has a modeled hollow underside, and the neck has continuous spiral thread geometry.

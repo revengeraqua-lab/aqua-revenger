@@ -44,6 +44,7 @@ def verify(base):
             if chapter=='1':
                 assert not page.locator('body').evaluate("e=>e.classList.contains('header-scrolled')")
             if chapter=='3':
+                page.wait_for_function('Number(document.querySelector(".story-stage").dataset.cap)>.999')
                 assert float(stage.get_attribute('data-cap'))>.99
                 assert_cap_visible()
             if chapter=='4':
@@ -51,6 +52,16 @@ def verify(base):
                 assert abs(stage.bounding_box()['y'])<1
                 assert_cap_visible()
                 page.screenshot(path=str(output/'cinematic-pour.png'))
+        # The cap must clear the threads before any sideways travel.
+        for progress in [.43,.46,.49,.505,.518,.53,.54,.55,.53,.505,.49,.43]:
+            seek(progress)
+            assert_cap_visible()
+            motion=stage.evaluate('(e)=>({...e.dataset})')
+            if float(motion['capPark'])<.0001:
+                assert float(motion['capLateral'])<.0001, 'Cap slid sideways while still on the neck'
+            if float(motion['capPark'])>.001:
+                assert float(motion['capScrew'])>.999 and float(motion['capLift'])>.999, 'Cap must clear the neck before parking'
+            if progress in [.46,.505,.54]:page.screenshot(path=str(output/('cap-opening-'+str(progress)+'.png')))
         # Verify a full turn with actual right-mouse drags, not a mocked angle.
         seek(.33)
         canvas=stage.locator('canvas')
@@ -152,7 +163,7 @@ def verify(base):
         touch.close()
         assert not errors,errors
         assert not bad,bad
-        print('PASS: Full-screen water opening, single logo, transparent-to-white fixed header, cap framing at short viewports, right-drag 360°, touch rotation, native vertical scroll, 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
+        print('PASS: Full-screen water opening, single logo, transparent-to-white fixed header, staged axial cap opening/reverse closing, cap framing at short viewports, right-drag 360°, touch rotation, native vertical scroll, 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
         browser.close()
 if __name__=='__main__':
     if len(sys.argv)>1:verify(sys.argv[1].rstrip('/'))

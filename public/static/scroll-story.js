@@ -1,10 +1,11 @@
 import * as THREE from 'three';
+import { createCapMotion } from './cap-motion.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
-import { makeBottle } from './bottle-3d.js';
+import { makeBottle } from './bottle-3d.js?v=2';
 import { makeWater } from './water-3d.js';
 import { createBrandWorld } from './brand-world.js?v=3';
 import { attachBottleRotation } from './bottle-viewer.js';
-import { createStoryTimeline } from './story-timeline.js';
+import { createStoryTimeline } from './story-timeline.js?v=2';
 
 const track=document.querySelector('.scroll-story');
 const stage=track.querySelector('.story-stage');
@@ -41,8 +42,7 @@ function reportCapBounds(){
 }
 let paused=document.body.classList.contains('motion-paused');
 const mouth=new THREE.Vector3();
-const capClosed=new THREE.Vector3();
-const capAnchor=new THREE.Vector3();
+const updateCap=createCapMotion();
 
 function measure() {
   mobile=innerWidth<=900;
@@ -120,25 +120,12 @@ function render(now=0) {
     if(rotation)rotation.sync(state.arrival>.95 && Boolean(renderer));
     model.liquid.scale.y=1-state.fill*.06;
     model.bottle.updateWorldMatrix(true,true);
-    capClosed.set(0,2.305,0);model.bottle.localToWorld(capClosed);
-    // Reserve the actual navigation height plus a visible margin. A fixed
-    // world-space y position clipped the detached cap on shorter viewports.
-    const capScale=THREE.MathUtils.lerp(scale,mobile?.73:.90,open);
-    const halfHeight=Math.tan(camera.fov*Math.PI/360)*(camera.position.z-.08);
-    const safeTop=halfHeight*(1-2*(headerBottom+30)/stage.clientHeight);
-    const capRadius=.40*capScale;
-    const overflow=Math.max(0,capClosed.y+capRadius-safeTop);
-    if(overflow>0 && open<.99){
-      model.bottle.position.y-=overflow;model.bottle.updateWorldMatrix(true,true);
-      capClosed.set(0,2.305,0);model.bottle.localToWorld(capClosed);
-    }
-    const safeRight=halfHeight*camera.aspect-capRadius-.16;
-    capAnchor.set(Math.min(mobile?.80:2.15,safeRight),Math.min(mobile?1.30:2.55,safeTop-capRadius),.08);
     model.cap.visible=state.arrival>.002;
-    model.cap.position.copy(capClosed).lerp(capAnchor,open);
-    model.cap.scale.setScalar(capScale);
-    model.cap.quaternion.copy(model.bottle.quaternion).slerp(
-      inspectionQuaternion.setFromEuler(new THREE.Euler(0,-open*Math.PI*3.5,-open*.12)),open);
+    const capMotion=updateCap({bottle:model.bottle,cap:model.cap,open,scale,mobile,camera,height:stage.clientHeight,headerBottom});
+    stage.dataset.capScrew=capMotion.screw.toFixed(4);
+    stage.dataset.capLift=capMotion.lift.toFixed(4);
+    stage.dataset.capPark=capMotion.park.toFixed(4);
+    stage.dataset.capLateral=capMotion.lateral.toFixed(5);
     mouth.set(0,2.355,.01);model.bottle.localToWorld(mouth);
     if(!still)flowTime+=dt;
     water.update(mouth,state,flowTime,mobile);
