@@ -71,4 +71,17 @@
       form.querySelector('[role="status"]').textContent = 'Email draft prepared. If your email app did not open, email GangaShreeroots@gmail.com or call +91 81694 56633. Nothing has been submitted on this website.';
     });
   }
+  // Only load the globe when a visitor approaches the service section.
+  const connections = document.querySelector('.connections-section');
+  if (connections) {
+    const loadGlobe = () => import('./service-globe.js?v=1').then(module => module.mountServiceGlobe(connections)).catch(() => {
+      connections.querySelector('.service-globe').dataset.renderer = 'fallback';
+    });
+    if ('IntersectionObserver' in window) {
+      const near = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) { near.disconnect(); loadGlobe(); }
+      }, { rootMargin: '300px' });
+      near.observe(connections);
+    } else loadGlobe();
+  }
 })();

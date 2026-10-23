@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, jsonify, render_template, request, Response
-from content import COMPANY, PHONE, EMAIL, REGIONS, OFFICES, VALUES, PORTFOLIO, LEADERS, PAGES
+from content import COMPANY, PHONE, EMAIL, REGIONS, CITY_CENTRES, OFFICES, VALUES, PORTFOLIO, LEADERS, PAGES
 from urllib.parse import urlencode
 from xml.sax.saxutils import escape
 from storage import StorageUnavailable, save_enquiry
@@ -53,7 +53,7 @@ def create_app(database=None):
         if key != "home":
             graph.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": origin + "/"}, {"@type": "ListItem", "position": 2, "name": page["label"], "item": canonical}]})
         return render_template("brand.html", key=key, page=page, pages=PAGES, company=COMPANY,
-            phone=PHONE, email=EMAIL, regions=REGIONS, offices=OFFICES, values=VALUES,
+            phone=PHONE, email=EMAIL, regions=REGIONS, city_centres=CITY_CENTRES, offices=OFFICES, values=VALUES,
             portfolio=PORTFOLIO, water_formats=PRODUCTS, leaders=leaders, canonical=canonical,
             share_image=origin + "/static/images/revenger-bottle-real.png",
             schema={"@context": "https://schema.org", "@graph": graph},

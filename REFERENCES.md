@@ -37,3 +37,14 @@ Evidence ID: `ev_148a267c3eef96218ddec499f6b26fa9b6ee2d852d014fed54a3adb9704e32a
 This was a read-only layout study; checkout and quantity interactions on Bisleri were not tested. The reference capture reported third-party script errors involving `$`, `initMap` and `initialised`. No reference code, product photography, logos or commercial terms were copied.
 
 Revenger uses the general idea of clear product imagery, size information and quantity controls in its own emerald/gold design. The client requested no prices, so no pricing or cart flow is displayed. Water-format and beverage enquiry controls carry the chosen product, preferred size where applicable, and bottle quantity to the contact composer. New product concept artwork is documented in `ASSETS.md`.
+
+## Service globe geography - 23 October 2026
+
+- Land/coastlines: Natural Earth, `ne_110m_land.geojson` from the publisher-maintained repository: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson
+- Natural Earth public-domain terms: https://www.naturalearthdata.com/about/terms-of-use/
+- Approximate city centres: GeoNames `cities1000` daily extract, https://download.geonames.org/export/dump/cities1000.zip ; Creative Commons Attribution 4.0: https://creativecommons.org/licenses/by/4.0/ ; source licence notice: https://download.geonames.org/export/dump/readme.txt
+- Three.js camera documentation: https://threejs.org/docs/#OrthographicCamera
+
+The map uses geographic land shapes without political boundaries. `tools/build_globe_data.py` prepares 6,083 land dots, 128 coastline paths and a code-native SVG fallback; it does not generate or alter raster images. `public/static/data/globe-land.json` is served locally. GeoNames attribution is visible beside the globe, with Natural Earth credited as well.
+
+Only the client's ten service cities are plotted. `CITY_CENTRES` in `content.py` records latitude, longitude and the GeoNames feature ID for each. Chitrakoot uses the Uttar Pradesh city centre named Chitrakoot Dham in the source; the other cities are matched within Maharashtra or Uttar Pradesh to avoid namesakes. These are approximate city centres, not new office or factory locations. The connecting arc illustrates the two service states and does not imply worldwide coverage.

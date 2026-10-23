@@ -6,6 +6,19 @@ REGIONS = {
     "Maharashtra": ["Mumbai", "Thane", "Palghar"],
     "Uttar Pradesh": ["Prayagraj", "Jaunpur", "Varanasi", "Pratapgarh", "Sultanpur", "Ayodhya", "Chitrakoot"],
 }
+# Approximate city centres, not office/factory coordinates. GeoNames CC BY.
+CITY_CENTRES = {
+    "Mumbai": (19.07283, 72.88261, 1275339),
+    "Thane": (19.19704, 72.96355, 1254661),
+    "Palghar": (19.69693, 72.76543, 1260730),
+    "Prayagraj": (25.44478, 81.84322, 1278994),
+    "Jaunpur": (25.75356, 82.68689, 1269135),
+    "Varanasi": (25.31668, 83.01041, 1253405),
+    "Pratapgarh": (25.89509, 81.9424, 1259337),
+    "Sultanpur": (26.25788, 82.07269, 1255491),
+    "Ayodhya": (26.79909, 82.2047, 1278094),
+    "Chitrakoot": (25.21473, 80.91645, 1267629),
+}
 OFFICES = [
     {"name": "Head office", "street": "505, Dattani Prism 1, Husaini Colony, Behind Dattani Mall", "city": "Vasai West, Mumbai Region", "state": "Maharashtra", "pin": "401202"},
     {"name": "Registered office", "street": "Pachkhara, Jasra", "city": "Prayagraj", "state": "Uttar Pradesh", "pin": "212107"},

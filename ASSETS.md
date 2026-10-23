@@ -39,6 +39,10 @@ Use case: ads-marketing. A cinematic editorial landscape photograph for premium 
 
 Supplied and identified by the client for publication on the company page. Original JPEG files are used without image alteration. CSS preserves each portrait's original aspect ratio; names, roles and descriptive alt text accompany the photographs.
 
+## Geographic globe assets - 23 October 2026
+
+`public/static/data/globe-land.json` and `public/static/images/service-globe.svg` are deterministic, code-native geographic assets prepared by `tools/build_globe_data.py` from Natural Earth's public-domain land dataset. No image generation was used for these assets. The SVG is the static fallback for the interactive Three.js globe. Approximate service-city centres come from GeoNames (CC BY 4.0); attribution is displayed alongside the globe. Source details are in `REFERENCES.md`.
+
 ## Product catalogue artwork - 23 October 2026
 
 - Final file: `public/static/images/revenger-drinks-collection.png` (1536 x 1024 RGBA).

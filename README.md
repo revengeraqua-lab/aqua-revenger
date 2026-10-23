@@ -57,3 +57,11 @@ The cinematic HUD (chapter numbers, progress labels, swipe instructions and visi
 
 
 The header and footer pair the wordmark with `public/static/images/leaf-mark.svg`, a vector interpretation of the packaging leaf emblem. Front and rear half-wrap label meshes repeat the same packaging artwork around the bottle, including the rear PET texture. No unconfirmed back-label specifications are invented. Chapter headings fade sequentially (out, then in) rather than crossfading on top of each other. `bottle-framing.js` projects the bottle bounds, reserves neck-release space, and fits them below navigation across viewport sizes and inspection angles.
+
+## Interactive service globe
+
+The homepage's "Local connections" section includes a real Three.js globe with all ten service-city points. Select a city or a globe point to focus it and update the city-specific enquiry link. Drag with a mouse or swipe horizontally on touch; arrow keys rotate and Home/India view reset the globe. Vertical touch gestures retain native page scrolling. The pause control and reduced-motion preference stop automatic motion.
+
+`service-globe.js` and the 162 KB local land geometry load only when approaching the section. Rendering stops offscreen or in a hidden tab. A static SVG and city selection remain available if WebGL is unavailable; there are no external runtime map requests or API keys. Only approximate city centres are shown, not factory, office or service-radius coordinates. Map/coordinate sources and attribution are in `REFERENCES.md`.
+
+Run `python tests/globe_check.py` (or append the live site URL) to verify lazy loading, ten-city selection, actual point picking, enquiry prefills, mouse/keyboard/touch rotation, responsive layout, reduced motion, offscreen suspension and WebGL fallback. Rebuild the coastlines, land dots and SVG from a downloaded Natural Earth `ne_110m_land.geojson` with `python tools/build_globe_data.py path/to/ne_110m_land.geojson`.
