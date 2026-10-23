@@ -15,7 +15,6 @@ export async function mountServiceGlobe(section) {
   if (root.dataset.mounted) return;
   root.dataset.mounted = 'true';
   const viewport = root.querySelector('.globe-viewport');
-  const pause = root.querySelector('.globe-pause');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const cities = [...section.querySelectorAll('.service-city')].map(button => ({
     button, city: button.dataset.city, state: button.dataset.state,
@@ -25,12 +24,11 @@ export async function mountServiceGlobe(section) {
   }));
   let selected = cities.findIndex(city => city.city === root.dataset.selected), hovered = -1;
   let renderer, scene, camera, globe, pulses;
-  let frame = 0, last = 0, visible = false, paused = false, gesture = null;
+  let frame = 0, last = 0, visible = false, gesture = null;
   let elapsed = 0, yaw = -79 * rad, pitch = 23 * rad, targetYaw = yaw, targetPitch = pitch;
   let auto = true, width = 1, height = 1;
   let zoom = 1, targetZoom = 1, pinch = null;
   const touches = new Map();
-  const zoomIn = root.querySelector('.globe-zoom-in'), zoomOut = root.querySelector('.globe-zoom-out');
   const world = new THREE.Vector3();
   const forward = new THREE.Vector3(0, 0, 1);
 
@@ -127,31 +125,15 @@ export async function mountServiceGlobe(section) {
       if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
       else { last = 0; if (visible) requestFrame(); }
     });
-    function syncMotion() {
-      pause.disabled = reduce.matches;
-      pause.setAttribute('aria-pressed', String(paused || reduce.matches));
-      pause.setAttribute('aria-label', reduce.matches ? 'Globe motion reduced' : paused ? 'Resume globe motion' : 'Pause globe motion');
-      pause.textContent = reduce.matches ? 'Motion off' : paused ? 'Play \u25b7' : 'Pause \u2161';
-      requestFrame();
-    }
-    pause.addEventListener('click', () => {
-      paused = !paused;
-      if (paused) { targetYaw = yaw; targetPitch = pitch; }
-      elapsed = 0; syncMotion();
-    });
-    reduce.addEventListener('change', syncMotion);
+    reduce.addEventListener('change', requestFrame);
     function reset() {
       targetYaw = yaw + Math.atan2(Math.sin(-79 * rad - yaw), Math.cos(-79 * rad - yaw));
       targetPitch = 23 * rad; setZoom(1); auto = true; elapsed = 0; requestFrame();
     }
-    root.querySelector('.globe-reset').addEventListener('click', reset);
     function setZoom(value) {
       targetZoom = clamp(value, 1, 4);
-      zoomIn.disabled = targetZoom >= 4; zoomOut.disabled = targetZoom <= 1;
       requestFrame();
     }
-    zoomIn.addEventListener('click', () => setZoom(targetZoom + .4));
-    zoomOut.addEventListener('click', () => setZoom(targetZoom - .4));
     // Wheel zoom requires focus, keeping ordinary page scrolling available.
     canvas.addEventListener('wheel', event => {
       if (document.activeElement !== canvas && !event.ctrlKey) return;
@@ -230,12 +212,11 @@ export async function mountServiceGlobe(section) {
     });
     canvas.addEventListener('webglcontextlost', event => {
       event.preventDefault(); cancelAnimationFrame(frame); frame = 0;
-      root.dataset.renderer = 'fallback'; root.querySelector('.globe-toolbar').hidden = true;
+      root.dataset.renderer = 'fallback';
       pins.hide(); canvas.hidden = true; renderer = null;
     });
-    root.querySelector('.globe-toolbar').hidden = false;
     root.dataset.renderer = 'webgl'; root.dataset.points = String(cities.length);
-    measure(); syncMotion(); setZoom(1);
+    measure(); setZoom(1);
   } catch (error) {
     renderer?.dispose(); renderer = null; root.dataset.renderer = 'fallback';
   }
@@ -244,7 +225,7 @@ export async function mountServiceGlobe(section) {
     frame = 0;
     if (!renderer || document.hidden) return;
     const dt = last ? Math.min((time - last) / 1000, .05) : .016; last = time;
-    const moving = !paused && !reduce.matches && !gesture && !pinch;
+    const moving = !reduce.matches && !gesture && !pinch;
     if (moving) elapsed += dt;
     const desiredYaw = targetYaw + (moving && auto ? Math.sin(elapsed * .32) * .14 : 0);
     const blend = reduce.matches ? 1 : 1 - Math.exp(-dt * 7);
@@ -252,7 +233,6 @@ export async function mountServiceGlobe(section) {
     zoom += (targetZoom - zoom) * blend;
     if (Math.abs(targetZoom - zoom) < .0001) zoom = targetZoom;
     camera.zoom = zoom; camera.updateProjectionMatrix();
-    root.querySelector('.globe-zoom-level').textContent = zoom.toFixed(1) + '\u00d7';
     globe.rotation.set(pitch, yaw, 0); globe.updateMatrixWorld(true);
     camera.updateMatrixWorld();
     cities.forEach((city, i) => {
@@ -268,14 +248,14 @@ export async function mountServiceGlobe(section) {
     pulses.forEach((ring, i) => {
       ring.position.copy(active.point);
       ring.quaternion.setFromUnitVectors(forward, world.copy(active.point).normalize());
-      const phase = reduce.matches || paused ? i * .5 : (elapsed * .5 + i * .5) % 1;
+      const phase = reduce.matches ? i * .5 : (elapsed * .5 + i * .5) % 1;
       ring.scale.setScalar(1 + phase * 2); ring.material.opacity = (1 - phase) * .65;
     });
     pins.update(width, height, selected);
     root.dataset.zoom = zoom.toFixed(3);
     root.dataset.rotation = (yaw / rad).toFixed(2);
     root.dataset.pitch = (pitch / rad).toFixed(2);
-    root.dataset.motion = !visible ? 'offscreen' : reduce.matches ? 'reduced' : paused ? 'paused' : 'running';
+    root.dataset.motion = !visible ? 'offscreen' : reduce.matches ? 'reduced' : 'running';
     renderer.render(scene, camera);
     const settling = Math.abs(desiredYaw - yaw) > .0001 || Math.abs(targetPitch - pitch) > .0001 || Math.abs(targetZoom - zoom) > .0001;
     if (visible && (moving || settling)) requestFrame();

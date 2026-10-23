@@ -74,7 +74,7 @@
   // Only load the globe when a visitor approaches the service section.
   const connections = document.querySelector('.connections-section');
   if (connections) {
-    const loadGlobe = () => import('./service-globe.js?v=2').then(module => module.mountServiceGlobe(connections)).catch(() => {
+    const loadGlobe = () => import('./service-globe.js?v=3').then(module => module.mountServiceGlobe(connections)).catch(() => {
       connections.querySelector('.service-globe').dataset.renderer = 'fallback';
     });
     if ('IntersectionObserver' in window) {
