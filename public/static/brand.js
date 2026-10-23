@@ -13,6 +13,14 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { close(); menu.focus(); } });
     nav.addEventListener('click', e => { if (e.target.closest('a')) close(); });
   }
+  const motion = document.querySelector('.motion-toggle');
+  if (motion) motion.addEventListener('click', () => {
+    const paused = document.body.classList.toggle('motion-paused');
+    motion.setAttribute('aria-pressed', String(paused));
+    motion.setAttribute('aria-label', paused ? 'Resume 3D animation' : 'Pause 3D animation');
+    motion.innerHTML = paused ? '&#9654; <span>Resume motion</span>' : '&#8545; <span>Pause motion</span>';
+    document.dispatchEvent(new Event('revenger:motion'));
+  });
   const form = document.querySelector('#contact-draft');
   if (form) {
     const params = new URLSearchParams(location.search);

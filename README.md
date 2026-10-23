@@ -13,7 +13,7 @@ Open http://127.0.0.1:5000. Python 3.11+ is supported. No Node build is needed. 
 
 ## Content
 
-`content.py` contains approved company facts, leadership biographies, the water/soda/jeera/lemon portfolio, two office addresses, ten service areas, and page titles/descriptions. `templates/brand.html` renders all six pages. `public/static/brand.css` and `brand.js` provide the responsive design and lightweight interactions. Prior cinematic assets are retained but not loaded by the portfolio.
+`content.py` contains approved company facts, leadership biographies, the water/soda/jeera/lemon portfolio, two office addresses, ten service areas, and page titles/descriptions. `templates/brand.html` renders all six pages. `public/static/brand.css` and `brand.js` provide the responsive design and lightweight interactions. The homepage includes the cinematic Three.js / GSAP scroll story: forest and water-drop introduction, bottle reveal, opening cap, water pouring into a glass and brand finale. Other pages load only the portfolio styles and interactions.
 
 Leadership is presented as text, as approved pending portraits. Bottle artwork is the earlier local site asset. New chat attachments need to be supplied as accessible image files before they can replace the existing artwork. Do not infer certifications or product sizes from promotional images.
 
@@ -37,4 +37,4 @@ python tests/browser_check.py
 python tests/browser_check.py https://revenger-397n.vercel.app
 ```
 
-Browser verification uses the installed Chrome executable through Playwright in an isolated profile. It checks all pages, metadata, responsive widths, navigation and contact prefills. No email is sent.
+Browser verification uses the installed Chrome executable through Playwright in an isolated profile. It checks 3D rendering, scroll chapters, cap opening, pouring, reverse scroll, pause/resume, reduced motion, all pages, metadata, responsive widths, navigation and contact prefills. No email is sent.

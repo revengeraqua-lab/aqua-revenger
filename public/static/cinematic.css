@@ -1,0 +1,13 @@
+/* Keep the cinematic stage scoped to the homepage; portfolio pages keep their design. */
+.scroll-story{--display:'DM Sans',Arial,sans-serif;--sans:'DM Sans',Arial,sans-serif;--green:#073d30;--ivory:#fafaf4;scroll-margin-top:0}
+.story-stage.hero{width:100%;margin:0;min-height:600px;gap:0;align-items:normal;grid-template-columns:none;padding-bottom:0;border-radius:0}
+.story-stage p{margin-top:0}.story-stage .story-company{line-height:1.2}.story-stage .story-copy>.story-cue{margin-top:25px}
+.story-stage .scene-fallback>img{position:absolute;width:250px;height:80%;object-fit:contain;left:70%;top:50%;transform:translate(-50%,-50%)}
+.story-stage .motion-toggle{border:1px solid currentColor;background:transparent;color:inherit;padding:9px 13px;font:10px var(--sans);cursor:pointer}
+.story-stage .story-brand small{line-height:1.5}.story-stage .story-copy .button{background:var(--story-ink);color:#f5f5ed;border-color:var(--story-ink)}
+.story-stage[data-scene=dark] .story-copy .button{background:#e1ebaf;color:#073d30;border-color:#e1ebaf}
+.story-stage .story-copy h1,.story-stage .story-copy h2{overflow-wrap:normal}.story-stage .story-copy>p{max-width:365px}.story-stage .story-formats{flex-wrap:wrap}
+.story-stage .story-topline{line-height:1.2}.story-stage .story-progress{width:auto}.story-stage .story-steps{line-height:1.5}
+#our-drinks{scroll-margin-top:20px}
+@media(max-width:900px){.story-stage.hero{min-height:600px}.story-stage .scene-fallback>img{left:54%;top:65%;height:53%;width:160px}.story-stage .story-copy>p{max-width:245px}.story-stage .story-formats{max-width:260px}}
+@media(prefers-reduced-motion:reduce){.scroll-story{height:auto}.story-stage.hero{position:relative}.story-stage .motion-toggle{display:none}}

@@ -35,7 +35,7 @@ No search-volume or competition metrics were available, so these are intent-base
 - Organization, Brand, Person references, WebSite, WebPage and BreadcrumbList JSON-LD with client-supplied facts.
 - Both offices and the ten service areas represented without fake branches, ratings, opening hours or credentials.
 - `sitemap.xml`, `robots.txt`, genuine 404 responses; public content available without JavaScript.
-- Responsive local fonts, deferred small interaction script, no heavy Three.js or GSAP loading on the portfolio.
+- Responsive local fonts, deferred small interaction script, Three.js and GSAP load only on the cinematic homepage; company, product, values, coverage and contact pages stay lightweight.
 - Direct call/email actions; email draft composer makes no database submission claim.
 
 Google ignores meta-keywords; target terms belong in useful visible copy, titles and descriptions: https://developers.google.com/search/docs/crawling-indexing/special-tags
