@@ -19,7 +19,7 @@ Leadership includes the client-supplied portraits of Subir Banerjee (Managing Di
 
 Water enquiry cards restore the four existing formats (250 ml, 500 ml, 1 litre and 2 litres). Visitors choose a bottle quantity, then continue to Contact with their product, size and quantity prefilled. Beverage cards offer quantity enquiries without inventing unconfirmed capacities. The client requested no prices; no prices, case counts or checkout are displayed. Final formats and availability are confirmed by the company.
 
-The shared footer includes the leaf wordmark, navigation, service areas, direct telephone/email and office map links, plus the linked "Designed and developed by dipanshudev.com" credit. The strip above navigation is removed from every page. Cards use one-time scroll entrances and subtle hover feedback, respecting reduced motion; the cinematic homepage is retained. `REFERENCES.md` documents the REA Bisleri layout inspection.
+The compact shared footer includes the leaf wordmark, two-column navigation, direct telephone/email and office map links, plus the linked "Designed and developed by dipanshudev.com" credit. Its large invitation and repeated city list are removed to reduce height. The strip above navigation is removed from every page. Cards use one-time scroll entrances and subtle hover feedback, respecting reduced motion; the cinematic homepage is retained. `REFERENCES.md` documents the REA Bisleri layout inspection.
 
 ## Deployment
 
@@ -60,8 +60,10 @@ The header and footer pair the wordmark with `public/static/images/leaf-mark.svg
 
 ## Interactive service globe
 
-The homepage's "Local connections" section includes a real Three.js globe with all ten service-city points. Select a city or a globe point to focus it and update the city-specific enquiry link. Drag with a mouse or swipe horizontally on touch; arrow keys rotate and Home/India view reset the globe. Vertical touch gestures retain native page scrolling. The pause control and reduced-motion preference stop automatic motion.
+The homepage's "Local connections" section includes a real Three.js globe with all ten service-city points. All ten labels appear together in the default India view, with leader lines to their actual geographic anchors; nearby city labels are separated into readable columns. Select a city, label or globe point to focus it and update the city-specific enquiry link. Drag with a mouse or swipe horizontally on touch; arrow keys rotate. Zoom from 1x to 4x with +/minus buttons, keyboard +/minus, a focused globe's mouse wheel, or a two-finger touch pinch. Home/All locations resets both orientation and zoom to fit the service cities. Vertical single-finger gestures retain native page scrolling. The pause control and reduced-motion preference stop automatic motion.
 
 `service-globe.js` and the 162 KB local land geometry load only when approaching the section. Rendering stops offscreen or in a hidden tab. A static SVG and city selection remain available if WebGL is unavailable; there are no external runtime map requests or API keys. Only approximate city centres are shown, not factory, office or service-radius coordinates. Map/coordinate sources and attribution are in `REFERENCES.md`.
 
-Run `python tests/globe_check.py` (or append the live site URL) to verify lazy loading, ten-city selection, actual point picking, enquiry prefills, mouse/keyboard/touch rotation, responsive layout, reduced motion, offscreen suspension and WebGL fallback. Rebuild the coastlines, land dots and SVG from a downloaded Natural Earth `ne_110m_land.geojson` with `python tools/build_globe_data.py path/to/ne_110m_land.geojson`.
+Run `python tests/globe_check.py` (or append the live site URL) to verify lazy loading, simultaneous non-overlapping labels, ten-city selection, actual point picking, enquiry prefills, button/wheel/keyboard/pinch zoom, mouse/touch rotation, responsive layout, reduced motion, offscreen suspension and WebGL fallback. Rebuild the coastlines, land dots and SVG from a downloaded Natural Earth `ne_110m_land.geojson` with `python tools/build_globe_data.py path/to/ne_110m_land.geojson`.
+
+The client's Google Search Console verification meta tag is present in the shared HTML head on all six pages. Publishing the tag does not complete the verification action in the client's Search Console account.

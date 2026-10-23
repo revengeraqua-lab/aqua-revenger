@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three/three.module.js';
+import { createGlobePins } from './globe-pins.js';
 
 const rad = Math.PI / 180;
 const clamp = THREE.MathUtils.clamp;
@@ -14,7 +15,6 @@ export async function mountServiceGlobe(section) {
   if (root.dataset.mounted) return;
   root.dataset.mounted = 'true';
   const viewport = root.querySelector('.globe-viewport');
-  const label = root.querySelector('.globe-city-label');
   const pause = root.querySelector('.globe-pause');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const cities = [...section.querySelectorAll('.service-city')].map(button => ({
@@ -28,6 +28,9 @@ export async function mountServiceGlobe(section) {
   let frame = 0, last = 0, visible = false, paused = false, gesture = null;
   let elapsed = 0, yaw = -79 * rad, pitch = 23 * rad, targetYaw = yaw, targetPitch = pitch;
   let auto = true, width = 1, height = 1;
+  let zoom = 1, targetZoom = 1, pinch = null;
+  const touches = new Map();
+  const zoomIn = root.querySelector('.globe-zoom-in'), zoomOut = root.querySelector('.globe-zoom-out');
   const world = new THREE.Vector3();
   const forward = new THREE.Vector3(0, 0, 1);
 
@@ -40,7 +43,6 @@ export async function mountServiceGlobe(section) {
     root.querySelector('.globe-selected-city').textContent = city.city;
     root.querySelector('.globe-selected-state').textContent = city.state;
     root.querySelector('.globe-enquire').href = '/contact?city=' + encodeURIComponent(city.city);
-    label.textContent = city.city;
     if (focus) {
       const desired = -city.lon * rad;
       targetYaw = yaw + Math.atan2(Math.sin(desired - yaw), Math.cos(desired - yaw));
@@ -50,6 +52,7 @@ export async function mountServiceGlobe(section) {
     requestFrame();
   }
   cities.forEach((city, i) => city.button.addEventListener('click', () => select(i)));
+  const pins = createGlobePins(root, cities, select);
   // Keep city selection/enquiries available even when WebGL or map data fails.
   select(selected, false);
 
@@ -64,7 +67,7 @@ export async function mountServiceGlobe(section) {
     const canvas = renderer.domElement;
     canvas.tabIndex = 0;
     canvas.setAttribute('role', 'group');
-    canvas.setAttribute('aria-label', 'Service globe. Drag to rotate, use arrow keys to explore, Home to return to India. Choose a city with the city buttons.');
+    canvas.setAttribute('aria-label', 'Service globe. Drag to rotate, use arrow keys to explore, plus and minus to zoom, Home to show all locations. Pinch with two fingers to zoom.');
     canvas.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight ArrowUp ArrowDown Home');
     viewport.append(canvas);
     scene = new THREE.Scene();
@@ -107,6 +110,7 @@ export async function mountServiceGlobe(section) {
     });
 
     function measure() {
+      if (!renderer) return;
       width = viewport.clientWidth; height = viewport.clientHeight;
       const aspect = width / Math.max(1, height);
       camera.left = -1.24 * Math.max(1, aspect); camera.right = -camera.left;
@@ -138,9 +142,21 @@ export async function mountServiceGlobe(section) {
     reduce.addEventListener('change', syncMotion);
     function reset() {
       targetYaw = yaw + Math.atan2(Math.sin(-79 * rad - yaw), Math.cos(-79 * rad - yaw));
-      targetPitch = 23 * rad; auto = true; elapsed = 0; requestFrame();
+      targetPitch = 23 * rad; setZoom(1); auto = true; elapsed = 0; requestFrame();
     }
     root.querySelector('.globe-reset').addEventListener('click', reset);
+    function setZoom(value) {
+      targetZoom = clamp(value, 1, 4);
+      zoomIn.disabled = targetZoom >= 4; zoomOut.disabled = targetZoom <= 1;
+      requestFrame();
+    }
+    zoomIn.addEventListener('click', () => setZoom(targetZoom + .4));
+    zoomOut.addEventListener('click', () => setZoom(targetZoom - .4));
+    // Wheel zoom requires focus, keeping ordinary page scrolling available.
+    canvas.addEventListener('wheel', event => {
+      if (document.activeElement !== canvas && !event.ctrlKey) return;
+      event.preventDefault(); setZoom(targetZoom * Math.exp(-event.deltaY * .002));
+    }, { passive: false });
     function nearest(event) {
       const box = canvas.getBoundingClientRect();
       let index = -1, distance = 22;
@@ -152,11 +168,25 @@ export async function mountServiceGlobe(section) {
     }
     canvas.addEventListener('contextmenu', event => event.preventDefault());
     canvas.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'touch') {
+        touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        if (touches.size === 2) {
+          const [a, b] = [...touches.values()];
+          pinch = { distance: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), zoom: targetZoom };
+          gesture = null; auto = false;
+          touches.forEach((_, id) => canvas.setPointerCapture(id)); return;
+        }
+      }
       if (gesture || ![0, 2].includes(event.button)) return;
       gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: targetYaw, pitch: targetPitch, touch: event.pointerType === 'touch', dragging: false, vertical: false };
       if (!gesture.touch) canvas.focus({ preventScroll: true });
     });
     canvas.addEventListener('pointermove', event => {
+      if (touches.has(event.pointerId)) touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pinch && touches.size >= 2) {
+        const [a, b] = [...touches.values()];
+        setZoom(pinch.zoom * Math.hypot(a.x - b.x, a.y - b.y) / pinch.distance); return;
+      }
       if (!gesture) { hovered = nearest(event); canvas.style.cursor = hovered >= 0 ? 'pointer' : ''; requestFrame(); return; }
       if (event.pointerId !== gesture.id || gesture.vertical) return;
       const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y;
@@ -171,6 +201,12 @@ export async function mountServiceGlobe(section) {
       requestFrame();
     });
     function release(event) {
+      touches.delete(event.pointerId);
+      if (pinch) {
+        pinch = null; gesture = null; canvas.classList.remove('is-dragging');
+        if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+        requestFrame(); return;
+      }
       if (!gesture || event.pointerId !== gesture.id) return;
       const click = event.type === 'pointerup' && !gesture.dragging && !gesture.vertical;
       if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
@@ -182,6 +218,9 @@ export async function mountServiceGlobe(section) {
     canvas.addEventListener('lostpointercapture', () => { gesture = null; canvas.classList.remove('is-dragging'); });
     canvas.addEventListener('pointerleave', () => { hovered = -1; if (gesture && !gesture.dragging) gesture = null; requestFrame(); });
     canvas.addEventListener('keydown', event => {
+      if (['+', '=', '-', '_'].includes(event.key)) {
+        event.preventDefault(); setZoom(targetZoom + (['+', '='].includes(event.key) ? .4 : -.4)); return;
+      }
       if (event.key === 'Home') { event.preventDefault(); reset(); return; }
       if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
       event.preventDefault(); auto = false;
@@ -192,11 +231,11 @@ export async function mountServiceGlobe(section) {
     canvas.addEventListener('webglcontextlost', event => {
       event.preventDefault(); cancelAnimationFrame(frame); frame = 0;
       root.dataset.renderer = 'fallback'; root.querySelector('.globe-toolbar').hidden = true;
-      label.style.opacity = '0'; canvas.hidden = true; renderer = null;
+      pins.hide(); canvas.hidden = true; renderer = null;
     });
     root.querySelector('.globe-toolbar').hidden = false;
     root.dataset.renderer = 'webgl'; root.dataset.points = String(cities.length);
-    measure(); syncMotion();
+    measure(); syncMotion(); setZoom(1);
   } catch (error) {
     renderer?.dispose(); renderer = null; root.dataset.renderer = 'fallback';
   }
@@ -205,11 +244,15 @@ export async function mountServiceGlobe(section) {
     frame = 0;
     if (!renderer || document.hidden) return;
     const dt = last ? Math.min((time - last) / 1000, .05) : .016; last = time;
-    const moving = !paused && !reduce.matches && !gesture;
+    const moving = !paused && !reduce.matches && !gesture && !pinch;
     if (moving) elapsed += dt;
     const desiredYaw = targetYaw + (moving && auto ? Math.sin(elapsed * .32) * .14 : 0);
     const blend = reduce.matches ? 1 : 1 - Math.exp(-dt * 7);
     yaw += (desiredYaw - yaw) * blend; pitch += (targetPitch - pitch) * blend;
+    zoom += (targetZoom - zoom) * blend;
+    if (Math.abs(targetZoom - zoom) < .0001) zoom = targetZoom;
+    camera.zoom = zoom; camera.updateProjectionMatrix();
+    root.querySelector('.globe-zoom-level').textContent = zoom.toFixed(1) + '\u00d7';
     globe.rotation.set(pitch, yaw, 0); globe.updateMatrixWorld(true);
     camera.updateMatrixWorld();
     cities.forEach((city, i) => {
@@ -218,6 +261,7 @@ export async function mountServiceGlobe(section) {
       city.screen.copy(world).project(camera);
       city.screen.x = (city.screen.x + 1) * width / 2;
       city.screen.y = (1 - city.screen.y) * height / 2;
+      city.visible = city.visible && city.screen.x >= 0 && city.screen.x <= width && city.screen.y >= 0 && city.screen.y <= height;
       city.pin.scale.setScalar(i === selected ? 1.6 : 1);
     });
     const active = cities[selected];
@@ -227,15 +271,13 @@ export async function mountServiceGlobe(section) {
       const phase = reduce.matches || paused ? i * .5 : (elapsed * .5 + i * .5) % 1;
       ring.scale.setScalar(1 + phase * 2); ring.material.opacity = (1 - phase) * .65;
     });
-    const labelled = cities[hovered >= 0 ? hovered : selected];
-    label.textContent = labelled.city;
-    label.style.opacity = labelled.visible ? '1' : '0';
-    label.style.transform = `translate(${clamp(labelled.screen.x + 22, 24, width - 120)}px,${clamp(labelled.screen.y - 28, 12, height - 45)}px)`;
+    pins.update(width, height, selected);
+    root.dataset.zoom = zoom.toFixed(3);
     root.dataset.rotation = (yaw / rad).toFixed(2);
     root.dataset.pitch = (pitch / rad).toFixed(2);
     root.dataset.motion = !visible ? 'offscreen' : reduce.matches ? 'reduced' : paused ? 'paused' : 'running';
     renderer.render(scene, camera);
-    const settling = Math.abs(desiredYaw - yaw) > .0001 || Math.abs(targetPitch - pitch) > .0001;
+    const settling = Math.abs(desiredYaw - yaw) > .0001 || Math.abs(targetPitch - pitch) > .0001 || Math.abs(targetZoom - zoom) > .0001;
     if (visible && (moving || settling)) requestFrame();
   }
 }

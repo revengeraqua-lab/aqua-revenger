@@ -19,9 +19,11 @@ def verify(base):
    expect(page.locator('.topline')).to_have_count(0)
    credit=page.get_by_role('link',name='dipanshudev.com',exact=False)
    expect(credit).to_have_attribute('href','https://dipanshudev.com')
+   expect(page.locator('meta[name="google-site-verification"]')).to_have_attribute('content','JXDHFEyrgIf-oBW4D--vTRlSq3RV4mFEZV3dvApucmc')
    for width in [320,390,768,1440]:
     page.set_viewport_size({'width':width,'height':1000})
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(key,width)
+    assert page.locator('footer').bounding_box()['height']<(640 if width<540 else 500 if width<1100 else 360),(key,width,'Footer too tall')
    if key=='products':
     expect(page.locator('.water-grid .catalogue-card')).to_have_count(4)
     expect(page.locator('.beverage-grid .catalogue-card')).to_have_count(3)

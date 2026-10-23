@@ -19,6 +19,7 @@ class BrandTests(unittest.TestCase):
                 r=self.client.get(page['path']);self.assertEqual(r.status_code,200)
                 html=r.data.decode('utf-8-sig');m=Metadata();m.feed(html)
                 self.assertEqual(m.h1,1);self.assertEqual(m.meta['description'],page['description'])
+                self.assertEqual(m.meta['google-site-verification'],'JXDHFEyrgIf-oBW4D--vTRlSq3RV4mFEZV3dvApucmc')
                 self.assertEqual(m.canonical,'https://revenger-397n.vercel.app'+page['path'])
                 schema=json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>',html,re.S).group(1))
                 self.assertEqual(schema['@graph'][0]['telephone'],'+918169456633')

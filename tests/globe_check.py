@@ -27,6 +27,10 @@ def verify(base):
         expect(globe).to_have_attribute('data-points', '10')
         expect(section.locator('.service-city')).to_have_count(10)
         expect(globe.locator('canvas')).to_be_visible()
+        expect(globe.locator('.globe-pin:visible')).to_have_count(10)
+        boxes=[node.bounding_box() for node in globe.locator('.globe-pin').all()]
+        for i,a in enumerate(boxes):
+            for b in boxes[i+1:]:assert not (a['x']<b['x']+b['width'] and a['x']+a['width']>b['x'] and a['y']<b['y']+b['height'] and a['y']+a['height']>b['y']),'Pin labels overlap'
         # The globe genuinely moves without user input.
         before = globe.get_attribute('data-rotation'); page.wait_for_timeout(700)
         assert before != globe.get_attribute('data-rotation')
@@ -42,12 +46,29 @@ def verify(base):
         section.get_by_role('button', name='Prayagraj', exact=True).click()
         page.wait_for_timeout(1000)
         page.screenshot(path='test-results/globe-desktop.png')
-        expect(globe.locator('.globe-city-label')).to_have_text('Prayagraj')
+        expect(globe.get_by_role('button',name='Show Prayagraj on globe')).to_have_attribute('aria-pressed','true')
         frozen = globe.get_attribute('data-rotation'); page.wait_for_timeout(500)
         assert frozen == globe.get_attribute('data-rotation'), 'Pause must freeze the globe'
         canvas = globe.locator('canvas'); box = canvas.bounding_box()
-        page.mouse.move(box['x']+box['width']*.3, box['y']+box['height']*.6)
-        page.mouse.down(); page.mouse.move(box['x']+box['width']*.8, box['y']+box['height']*.6, steps=18); page.mouse.up()
+        original=canvas.screenshot()
+        for _ in range(2):globe.get_by_role('button',name='Zoom in globe',exact=True).click()
+        page.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)>1.79')
+        assert original!=canvas.screenshot(),'Zoom must change the rendered globe'
+        canvas.focus();page.mouse.move(box['x']+box['width']*.5,box['y']+box['height']*.5);page.mouse.wheel(0,-160)
+        page.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)>2.2')
+        canvas.press('-');page.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)<2.2')
+        for _ in range(10):
+            if globe.get_by_role('button',name='Zoom in globe',exact=True).is_enabled():globe.get_by_role('button',name='Zoom in globe',exact=True).click()
+        expect(globe.get_by_role('button',name='Zoom in globe',exact=True)).to_be_disabled()
+        globe.get_by_role('button',name='Show all service locations',exact=True).click()
+        page.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)===1')
+        expect(globe.locator('.globe-pin:visible')).to_have_count(10)
+        globe.get_by_role('button',name='Show Palghar on globe').click()
+        expect(globe).to_have_attribute('data-selected','Palghar')
+        globe.get_by_role('button',name='Show all service locations',exact=True).click();page.wait_for_timeout(1000)
+        box=canvas.bounding_box();frozen=globe.get_attribute('data-rotation')
+        page.mouse.move(box['x']+box['width']*.45, box['y']+box['height']*.82)
+        page.mouse.down(); page.mouse.move(box['x']+box['width']*.85, box['y']+box['height']*.82, steps=18); page.mouse.up()
         page.wait_for_timeout(1000)
         assert abs(float(globe.get_attribute('data-rotation'))-float(frozen)) > 40, 'Real mouse drag must rotate'
         canvas.focus(); canvas.press('ArrowLeft'); page.wait_for_timeout(500)
@@ -79,6 +100,19 @@ def verify(base):
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'), width
         session = mobile.new_cdp_session(m)
         b = mg.locator('canvas').bounding_box(); start = (b['x']+b['width']*.25, b['y']+b['height']*.5)
+        # Real two-finger pinch, delivered as native touch events.
+        cy=b['y']+b['height']*.5;cx=b['x']+b['width']*.5
+        def fingers(distance):return [{'id':1,'x':cx-distance,'y':cy},{'id':2,'x':cx+distance,'y':cy}]
+        session.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':fingers(36)})
+        for distance in range(40,76,4):session.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':fingers(distance)})
+        session.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+        m.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)>1.5')
+        mg.get_by_role('button',name='Show all service locations',exact=True).click()
+        m.wait_for_function('Number(document.querySelector(".service-globe").dataset.zoom)===1')
+        expect(mg.locator('.globe-pin:visible')).to_have_count(10)
+        m.locator('.connection-visual').screenshot(path='test-results/globe-all-pins-mobile.png')
+        b=mg.locator('canvas').bounding_box()
+        start=(b['x']+b['width']*.45,b['y']+b['height']*.78)
         def swipe(dx,dy):
             session.send('Input.dispatchTouchEvent', {'type':'touchStart','touchPoints':[{'x':start[0],'y':start[1]}]})
             for n in range(1,13):
@@ -95,7 +129,7 @@ def verify(base):
         fixed = g.get_attribute('data-rotation'); page.wait_for_timeout(600)
         assert fixed == g.get_attribute('data-rotation')
         page.locator('[data-city="Varanasi"]').click(); expect(g).to_have_attribute('data-selected','Varanasi')
-        page.mouse.wheel(0,3000)
+        page.mouse.wheel(0,-30000)
         expect(g).to_have_attribute('data-motion','offscreen')
         fixed=g.get_attribute('data-rotation');page.wait_for_timeout(500)
         assert fixed==g.get_attribute('data-rotation'), 'Offscreen rendering must stop'
@@ -111,7 +145,7 @@ def verify(base):
         assert not errors, errors
         assert not bad, bad
         browser.close()
-        print('PASS: lazy 3D globe, 10 service points/city selectors, actual point click, city enquiry, mouse/keyboard/touch rotation, native mobile scroll, 5 widths, pause, reduced motion and WebGL fallback.')
+        print('PASS: 10 simultaneous readable pins, point/label/city selection, button/wheel/keyboard/pinch zoom, all-locations reset, city enquiry, mouse/touch rotation, native scrolling, 5 widths, pause/reduced motion, offscreen suspension and WebGL fallback.')
 
 
 if __name__ == '__main__':
