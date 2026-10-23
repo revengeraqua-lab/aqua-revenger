@@ -1,1 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#073d30"/><text x="15" y="48" font-family="Georgia" font-style="italic" font-weight="bold" font-size="47" fill="#e9edce">R</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="gold" x1="10" y1="8" x2="53" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f4e9ad"/>
+      <stop offset=".5" stop-color="#c39f4f"/>
+      <stop offset="1" stop-color="#ebd98b"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="#073d30"/>
+  <g transform="translate(7 3)">
+    <path d="M26 55C26 39 18 31 9 21" fill="none" stroke="#d5b867" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M23 43C5 41 1 22 5 6c17 7 28 22 18 37Z" fill="url(#gold)"/>
+    <path d="M25 45C23 27 36 16 48 13c1 18-6 31-23 32Z" fill="url(#gold)"/>
+    <path d="M24 47 9 14M26 46l17-26" fill="none" stroke="#fff6ce" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+    <path d="M26 58V45" fill="none" stroke="#d5b867" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>
