@@ -1,0 +1,33 @@
+(() => {
+  const root = document.documentElement;
+  const menu = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('#navigation');
+  if (menu && nav) {
+    root.classList.add('js-nav');
+    const close = () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); };
+    menu.addEventListener('click', () => {
+      const open = menu.getAttribute('aria-expanded') !== 'true';
+      nav.classList.toggle('open', open);
+      menu.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { close(); menu.focus(); } });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  }
+  const form = document.querySelector('#contact-draft');
+  if (form) {
+    const params = new URLSearchParams(location.search);
+    for (const name of ['city', 'product']) {
+      const select = form.elements.namedItem(name);
+      if ([...select.options].some(option => option.value === params.get(name))) select.value = params.get(name);
+    }
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const product = form.elements.product.selectedOptions[0].text;
+      const subject = 'Revenger enquiry — ' + data.get('city') + ' — ' + product;
+      const body = 'Name: ' + data.get('name') + '\nCity: ' + data.get('city') + '\nInterest: ' + product + '\n\n' + data.get('message');
+      location.href = 'mailto:GangaShreeroots@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      form.querySelector('[role="status"]').textContent = 'Email draft prepared. If your email app did not open, email GangaShreeroots@gmail.com or call +91 81694 56633. Nothing has been submitted on this website.';
+    });
+  }
+})();

@@ -51,8 +51,8 @@ class EnquiryTests(unittest.TestCase):
             client = create_app().test_client()
             home = client.get('/')
             self.assertEqual(home.status_code, 200)
-            self.assertIn(b'/static/scroll-story.js', home.data)
-            self.assertIn(b'data-available="false"', home.data)
+            self.assertIn(b'/static/brand.js', home.data)
+            self.assertIn(b'tel:+918169456633', home.data)
             self.assertEqual(client.get('/api/health').json, {'status':'ok', 'enquiries':'unconfigured'})
             self.assertEqual(client.post('/api/enquiries', json=self.details).status_code, 503)
 

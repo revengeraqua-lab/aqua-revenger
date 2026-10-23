@@ -4,7 +4,10 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, Response
+from content import COMPANY, PHONE, EMAIL, REGIONS, OFFICES, VALUES, PORTFOLIO, LEADERS, PAGES
+from urllib.parse import urlencode
+from xml.sax.saxutils import escape
 from storage import StorageUnavailable, save_enquiry
 
 BASE = Path(__file__).resolve().parent
@@ -26,17 +29,54 @@ def create_app(database=None):
     database_path = str(database) if database is not None else (None if serverless else str(BASE / "instance" / "revenger.sqlite3"))
     app.config.update(DATABASE=database_path, DATABASE_URL=database_url, MAX_CONTENT_LENGTH=32 * 1024)
 
-    @app.get("/")
-    def home():
-        return render_template("index.html", products=PRODUCTS, enquiries_available=bool(app.config["DATABASE_URL"] or app.config["DATABASE"]))
+    # Use an explicit origin so canonical URLs cannot be changed by a Host header.
+    origin = os.environ.get("SITE_URL", "https://revenger-397n.vercel.app").rstrip("/")
+
+    def brand_page(key):
+        page = PAGES[key]
+        canonical = origin + page["path"]
+        organization = {
+            "@type": "Organization", "@id": origin + "/#organization",
+            "name": COMPANY, "url": origin, "email": EMAIL,
+            "telephone": "+918169456633", "brand": {"@type": "Brand", "name": "Revenger"},
+            "address": [{"@type": "PostalAddress", "streetAddress": o["street"], "addressLocality": o["city"], "addressRegion": o["state"], "postalCode": o["pin"], "addressCountry": "IN"} for o in OFFICES],
+            "areaServed": [{"@type": "AdministrativeArea", "name": city} for cities in REGIONS.values() for city in cities],
+            "employee": [{"@type": "Person", "name": l["name"], "jobTitle": l["role"]} for l in LEADERS],
+        }
+        graph = [organization, {"@type": "WebSite", "@id": origin + "/#website", "url": origin, "name": "Revenger", "publisher": {"@id": origin + "/#organization"}},
+                 {"@type": "WebPage", "@id": canonical + "#webpage", "url": canonical, "name": page["title"], "description": page["description"], "isPartOf": {"@id": origin + "/#website"}}]
+        if key != "home":
+            graph.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": origin + "/"}, {"@type": "ListItem", "position": 2, "name": page["label"], "item": canonical}]})
+        return render_template("brand.html", key=key, page=page, pages=PAGES, company=COMPANY,
+            phone=PHONE, email=EMAIL, regions=REGIONS, offices=OFFICES, values=VALUES,
+            portfolio=PORTFOLIO, leaders=LEADERS, canonical=canonical,
+            share_image=origin + "/static/images/revenger-bottle-real.png",
+            schema={"@context": "https://schema.org", "@graph": graph},
+            map_url=lambda office: "https://www.google.com/maps/search/?" + urlencode({"api": 1, "query": office["street"] + ", " + office["city"] + ", " + office["pin"]}))
+
+    for key, page in PAGES.items():
+        app.add_url_rule(page["path"], endpoint=key, view_func=lambda key=key: brand_page(key))
+
+    @app.get("/robots.txt")
+    def robots():
+        return Response("User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: " + origin + "/sitemap.xml\n", mimetype="text/plain")
+
+    @app.get("/sitemap.xml")
+    def sitemap():
+        body = ''.join("<url><loc>" + escape(origin + p["path"]) + "</loc></url>" for p in PAGES.values())
+        return Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + body + '</urlset>', mimetype="application/xml")
+
+    @app.errorhandler(404)
+    def missing_page(error):
+        return render_template("404.html"), 404
 
     @app.get("/api/health")
     def health():
         return jsonify(status="ok", enquiries="configured" if app.config["DATABASE_URL"] or app.config["DATABASE"] else "unconfigured")
 
     @app.get("/api/products")
-    def products():
-        return jsonify(products=PRODUCTS)
+    def api_products():
+        return jsonify(products=PORTFOLIO)
 
     @app.post("/api/enquiries")
     def enquiry():
