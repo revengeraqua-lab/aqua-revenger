@@ -10,3 +10,6 @@ h1,h2,h3{overflow-wrap:anywhere}.split>*,.hero>*,.area-grid>*,.two-col>*,.contac
 /* The leaf emblem precedes the name, consistently across navigation/footer. */
 .wordmark{position:relative;padding-left:1.05em}
 .wordmark .brand-leaf{position:absolute;left:0;top:-.08em;width:.82em;height:1.15em;object-fit:contain}
+
+.leader-portrait{width:100%;max-width:320px;height:auto;object-fit:cover;object-position:center top;border:1px solid var(--line)}
+@media(max-width:800px){.leader-name.has-portrait{display:block}.leader-name.has-portrait h3{margin-top:24px}.leader-name.has-portrait .leader-portrait{max-width:300px}.leader-name.has-portrait p{margin-top:8px}}

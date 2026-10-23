@@ -43,13 +43,18 @@ def create_app(database=None):
             "areaServed": [{"@type": "AdministrativeArea", "name": city} for cities in REGIONS.values() for city in cities],
             "employee": [{"@type": "Person", "name": l["name"], "jobTitle": l["role"]} for l in LEADERS],
         }
+        # Client-supplied portraits are tracked assets served by the static CDN.
+        leaders = LEADERS
+        for person, leader in zip(organization["employee"], leaders):
+            if leader["portrait"]:
+                person["image"] = origin + "/static/" + leader["portrait"]
         graph = [organization, {"@type": "WebSite", "@id": origin + "/#website", "url": origin, "name": "Revenger", "publisher": {"@id": origin + "/#organization"}},
                  {"@type": "WebPage", "@id": canonical + "#webpage", "url": canonical, "name": page["title"], "description": page["description"], "isPartOf": {"@id": origin + "/#website"}}]
         if key != "home":
             graph.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": origin + "/"}, {"@type": "ListItem", "position": 2, "name": page["label"], "item": canonical}]})
         return render_template("brand.html", key=key, page=page, pages=PAGES, company=COMPANY,
             phone=PHONE, email=EMAIL, regions=REGIONS, offices=OFFICES, values=VALUES,
-            portfolio=PORTFOLIO, leaders=LEADERS, canonical=canonical,
+            portfolio=PORTFOLIO, leaders=leaders, canonical=canonical,
             share_image=origin + "/static/images/revenger-bottle-real.png",
             schema={"@context": "https://schema.org", "@graph": graph},
             map_url=lambda office: "https://www.google.com/maps/search/?" + urlencode({"api": 1, "query": office["street"] + ", " + office["city"] + ", " + office["pin"]}))

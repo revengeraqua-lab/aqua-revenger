@@ -30,3 +30,11 @@ Use case: ads-marketing. A cinematic editorial landscape photograph for premium 
 ## Leaf emblem and rear packaging — 23 October 2026
 
 `public/static/images/leaf-mark.svg` is a code-native vector interpretation of the gold leaf emblem on the existing bottle artwork, used before the Revenger name. The existing bottle photograph is UV-mapped onto complementary front/rear label surfaces and front/rear PET detail meshes for 360-degree inspection. No new product specifications or regulatory panel are implied.
+
+
+## Client-supplied leadership portraits — 23 October 2026
+
+- `public/static/images/subir-banerjee.jpeg`: Subir Banerjee, Managing Director, 1067 × 1474.
+- `public/static/images/rakesh-salve.jpeg`: Rakesh Salve, Chief Executive Officer, 1219 × 1290.
+
+Supplied and identified by the client for publication on the company page. Original JPEG files are used without image alteration. CSS preserves each portrait's original aspect ratio; names, roles and descriptive alt text accompany the photographs.
