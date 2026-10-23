@@ -65,8 +65,11 @@ def verify(base):
         # Verify a full turn with actual right-mouse drags, not a mocked angle.
         seek(.33)
         canvas=stage.locator('canvas')
-        expect(stage.locator('.rotation-hint')).to_be_visible()
-        page.get_by_role('button',name='Pause 3D animation').click()
+        expect(stage.locator('.rotation-hint')).to_be_hidden()
+        expect(stage.locator('.story-timeline')).to_be_hidden()
+        page.get_by_role('button',name='Pause 3D animation').focus()
+        page.get_by_role('button',name='Pause 3D animation').press('Space')
+        canvas.focus()
         before=canvas.screenshot()
         for _ in range(2):
             page.mouse.move(820,520)
@@ -75,16 +78,19 @@ def verify(base):
             page.mouse.up(button='right')
         page.wait_for_function('Math.abs(Number(document.querySelector(".story-stage").dataset.rotation))>360')
         assert before!=canvas.screenshot(), 'The rendered model must visibly rotate'
-        expect(page.get_by_role('button',name='Reset view')).to_be_visible()
+        assert page.get_by_role('button',name='Reset view').get_attribute('hidden') is None
         assert_cap_visible()
         page.screenshot(path=str(output/'bottle-rotated.png'))
-        page.get_by_role('button',name='Reset view').click()
+        page.get_by_role('button',name='Reset view').focus()
+        page.get_by_role('button',name='Reset view').press('Space')
         page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)===0')
         canvas.press('ArrowRight')
         page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)>0')
         canvas.press('Home')
         page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)===0')
-        page.get_by_role('button',name='Resume 3D animation').click()
+        page.get_by_role('button',name='Resume 3D animation').focus()
+        page.get_by_role('button',name='Resume 3D animation').press('Space')
+        canvas.focus()
         # Short desktop screens reproduce the original cap/nav collision.
         for width,height in [(1440,720),(1024,650),(1920,1080)]:
             page.set_viewport_size({'width':width,'height':height})
@@ -93,9 +99,13 @@ def verify(base):
                 assert_cap_visible()
         page.set_viewport_size({'width':1440,'height':1000})
         seek(0)
-        page.get_by_role('button',name='Pause 3D animation').click()
+        page.get_by_role('button',name='Pause 3D animation').focus()
+        page.get_by_role('button',name='Pause 3D animation').press('Space')
+        canvas.focus()
         expect(page.get_by_role('button',name='Resume 3D animation')).to_have_attribute('aria-pressed','true')
-        page.get_by_role('button',name='Resume 3D animation').click()
+        page.get_by_role('button',name='Resume 3D animation').focus()
+        page.get_by_role('button',name='Resume 3D animation').press('Space')
+        canvas.focus()
         for width in [320,390,768,1024]:
             page.set_viewport_size({'width':width,'height':900})
             seek(0)

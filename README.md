@@ -46,3 +46,5 @@ When the bottle is visible, hold the right or left mouse button on the scene and
 
 
 The cap opening is choreographed in `public/static/cap-motion.js`: continuous screw rotation with a matching axial rise, a separate vertical clearance lift, then a smooth arc to the parked position. Its orientation blend excludes the screw rotation so multiple turns remain continuous in either scroll direction. The cap has a modeled hollow underside, and the neck has continuous spiral thread geometry.
+
+The cinematic HUD (chapter numbers, progress labels, swipe instructions and visible pause/reset buttons) is visually removed. Pause and reset remain keyboard-focus controls; the canvas also supports Home to reset.

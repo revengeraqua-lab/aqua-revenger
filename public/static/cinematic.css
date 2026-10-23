@@ -32,3 +32,9 @@
 .bottle-controls [hidden]{display:none!important}.touch-hint{display:none}
 @media(pointer:coarse){.desktop-hint{display:none}.touch-hint{display:inline}}
 @media(max-width:900px){.bottle-controls{bottom:82px;right:7%;gap:10px}.bottle-controls .rotation-hint{font-size:8px}.rotation-reset{font-size:9px;padding:6px 9px}}
+
+/* Keep the cinematic scene free of visible HUD labels and controls. */
+.story-timeline,.story-scroll-hint,.story-caption,.rotation-hint{display:none!important}
+.motion-toggle,.rotation-reset{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:0!important;border:0!important;clip-path:inset(50%)!important;overflow:hidden!important;white-space:nowrap!important}
+/* Motion/reset remain reachable for keyboard and assistive-technology users. */
+.motion-toggle:focus-visible,.rotation-reset:focus-visible{width:auto!important;height:auto!important;padding:10px 14px!important;border:1px solid currentColor!important;clip-path:none!important;right:0;bottom:0;background:var(--paper);color:var(--ink)}
