@@ -14,11 +14,18 @@ def verify(base):
         page=browser.new_page(viewport={'width':1440,'height':1000})
         errors=[];bad=[]
         page.on('pageerror',lambda e:errors.append(str(e)))
+        page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
         page.on('response',lambda r:bad.append((r.status,r.url)) if r.status>=400 else None)
         page.goto(base+'/',wait_until='networkidle')
         stage=page.locator('.story-stage')
         expect(stage).to_have_attribute('data-renderer','webgl',timeout=30000)
         expect(stage.locator('canvas')).to_be_visible()
+        assert abs(stage.bounding_box()['y']) < 1, 'Water must begin at the top of the screen'
+        assert page.locator('.story-brand').count() == 0, 'No duplicate hero wordmark'
+        assert page.locator('.topline').count() == 0, 'No strip above the immersive opening'
+        assert page.locator('header').evaluate('e=>getComputedStyle(e).position') == 'fixed'
+        assert page.locator('header').evaluate('e=>getComputedStyle(e).backgroundColor') == 'rgba(0, 0, 0, 0)'
+        page.screenshot(path=str(output/'immersive-opening-desktop.png'))
         def seek(progress):
             d=page.locator('.scroll-story').evaluate('(e)=>({top:e.getBoundingClientRect().top+scrollY,distance:e.offsetHeight-document.querySelector(".story-stage").offsetHeight})')
             page.mouse.wheel(0,d['top']+d['distance']*progress-page.evaluate('scrollY'))
@@ -26,6 +33,10 @@ def verify(base):
         for progress,chapter in [(.33,'2'),(.55,'3'),(.76,'4'),(.99,'5'),(0,'1')]:
             seek(progress)
             expect(stage).to_have_attribute('data-chapter',chapter)
+            if chapter!='1':
+                expect(page.locator('body')).to_have_class(__import__('re').compile('header-scrolled'))
+            if chapter=='1':
+                assert not page.locator('body').evaluate("e=>e.classList.contains('header-scrolled')")
             if chapter=='3':assert float(stage.get_attribute('data-cap'))>.99
             if chapter=='4':
                 assert float(stage.get_attribute('data-flow'))>.99
@@ -36,6 +47,11 @@ def verify(base):
         page.get_by_role('button',name='Resume 3D animation').click()
         for width in [320,390,768,1024]:
             page.set_viewport_size({'width':width,'height':900})
+            seek(0)
+            expect(stage.locator('h1')).to_be_visible()
+            header_bottom=page.locator('header').bounding_box()['height']
+            assert stage.locator('h1').bounding_box()['y'] > header_bottom
+            if width==390:page.screenshot(path=str(output/'immersive-opening-mobile.png'))
             seek(.76)
             assert float(stage.get_attribute('data-flow'))>.99
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
@@ -73,7 +89,7 @@ def verify(base):
         expect(page.locator('.value')).to_have_count(7)
         assert not errors,errors
         assert not bad,bad
-        print('PASS: 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
+        print('PASS: Full-screen water opening, single logo, transparent-to-white fixed header, 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
         browser.close()
 if __name__=='__main__':
     if len(sys.argv)>1:verify(sys.argv[1].rstrip('/'))

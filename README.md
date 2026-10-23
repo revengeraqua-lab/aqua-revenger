@@ -13,7 +13,7 @@ Open http://127.0.0.1:5000. Python 3.11+ is supported. No Node build is needed. 
 
 ## Content
 
-`content.py` contains approved company facts, leadership biographies, the water/soda/jeera/lemon portfolio, two office addresses, ten service areas, and page titles/descriptions. `templates/brand.html` renders all six pages. `public/static/brand.css` and `brand.js` provide the responsive design and lightweight interactions. The homepage includes the cinematic Three.js / GSAP scroll story: forest and water-drop introduction, bottle reveal, opening cap, water pouring into a glass and brand finale. Other pages load only the portfolio styles and interactions.
+`content.py` contains approved company facts, leadership biographies, the water/soda/jeera/lemon portfolio, two office addresses, ten service areas, and page titles/descriptions. `templates/brand.html` renders all six pages. `public/static/brand.css` and `brand.js` provide the responsive design and lightweight interactions. The homepage includes the cinematic Three.js / GSAP scroll story: full-screen water introduction with gentle refraction, bottle reveal, opening cap, water pouring into a glass and brand finale. The homepage header starts transparent over the water and becomes a compact white fixed navigation on scroll. Other pages load only the portfolio styles and interactions.
 
 Leadership is presented as text, as approved pending portraits. Bottle artwork is the earlier local site asset. New chat attachments need to be supplied as accessible image files before they can replace the existing artwork. Do not infer certifications or product sizes from promotional images.
 

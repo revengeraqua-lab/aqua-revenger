@@ -1,12 +1,19 @@
 (() => {
   const root = document.documentElement;
+  if (document.body.classList.contains('is-home')) {
+    let scheduled = false;
+    const syncHeader = () => { document.body.classList.toggle('header-scrolled', scrollY > 48); scheduled = false; };
+    addEventListener('scroll', () => { if (!scheduled) { scheduled = true; requestAnimationFrame(syncHeader); } }, { passive: true });
+    syncHeader();
+  }
   const menu = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#navigation');
   if (menu && nav) {
     root.classList.add('js-nav');
-    const close = () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); };
+    const close = () => { document.body.classList.remove('nav-open'); nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); };
     menu.addEventListener('click', () => {
       const open = menu.getAttribute('aria-expanded') !== 'true';
+      document.body.classList.toggle('nav-open', open);
       nav.classList.toggle('open', open);
       menu.setAttribute('aria-expanded', String(open));
     });

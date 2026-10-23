@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
 import { makeBottle } from './bottle-3d.js';
 import { makeWater } from './water-3d.js';
-import { createBrandWorld } from './brand-world.js';
+import { createBrandWorld } from './brand-world.js?v=2';
 import { createStoryTimeline } from './story-timeline.js';
 
 const track=document.querySelector('.scroll-story');
@@ -45,7 +45,7 @@ function updateText(p) {
   if(index!==activeCopy){
     copies.forEach((copy,i)=>{copy.classList.toggle('is-active',i===index);copy.setAttribute('aria-hidden',String(i!==index));for(const link of copy.querySelectorAll('a,button'))link.tabIndex=i===index?0:-1;});
     activeCopy=index;stage.dataset.chapter=String(index+1);
-    stage.querySelector('.story-caption').textContent=['OUR ROOTS','MEET REVENGER','TWIST & RESET','YOUR REFRESHING MOMENT','FIND YOUR EVERYDAY'][index];
+    stage.querySelector('.story-caption').textContent=['A FRESH PERSPECTIVE','EVERYDAY REFRESHMENT','QUALITY. TRUST. PURPOSE.','YOUR REFRESHING MOMENT','A WORLD OF POSSIBILITIES'][index];
     stage.querySelector('.chapter-number').textContent=String(index+1).padStart(2,'0');
     stage.querySelectorAll('.story-steps span').forEach((step,i)=>step.classList.toggle('active',i===index));
   }
@@ -104,14 +104,14 @@ function render(now=0) {
     mouth.set(0,2.355,.01);model.bottle.localToWorld(mouth);
     if(!still)flowTime+=dt;
     water.update(mouth,state,flowTime,mobile);
-    world.update(state,p,camera,mobile,model.bottle.position);
+    world.update(state,p,camera,mobile,model.bottle.position,flowTime);
     camera.position.x=still?0:pointerX*.02;
     camera.position.y=still?0:pointerY*.02;
     camera.lookAt(0,0,0);
     renderer.render(scene,camera);
     if(!stage.classList.contains('is-webgl-ready'))stage.classList.add('is-webgl-ready');
   }
-  if(inView&&!still&&(Math.abs(target-current)>.00015||flow>.005))requestFrame();
+  if(inView&&!still&&(Math.abs(target-current)>.00015||flow>.005||state.roots>.005))requestFrame();
 }
 
 try {
