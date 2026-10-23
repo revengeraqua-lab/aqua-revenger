@@ -36,6 +36,18 @@ def verify(base):
             assert float(bounds['capTop']) >= nav['y']+nav['height']+8, bounds
             assert float(bounds['capLeft'])>=0 and float(bounds['capRight'])<=page.viewport_size['width'], bounds
             assert float(bounds['capBottom'])<page.viewport_size['height'], bounds
+        def assert_bottle_visible():
+            b=stage.evaluate('(e)=>({...e.dataset})')
+            assert float(b['bottleLeft'])>=0 and float(b['bottleRight'])<=page.viewport_size['width'], b
+            assert float(b['bottleTop'])>page.locator('header').bounding_box()['height'],b
+            assert float(b['bottleBottom'])<=page.viewport_size['height'],b
+        expect(page.locator('header .brand-leaf')).to_be_visible()
+        for progress in [.20,.215,.22,.225,.24,.415,.425,.43,.435,.445,.62,.635,.64,.645,.655,.86,.875,.88,.885,.895,.645,.435,.225]:
+            seek(progress)
+            count=stage.locator('.story-copy').evaluate_all('(els)=>els.filter(e=>getComputedStyle(e).visibility!=="hidden" && Number(getComputedStyle(e).opacity)>.001).length')
+            assert count<=1, ('Overlapping chapter headings',progress,count)
+            if progress>.3:assert_bottle_visible()
+        page.screenshot(path=str(output/'chapter-transition-clean.png'))
         for progress,chapter in [(.33,'2'),(.55,'3'),(.76,'4'),(.99,'5'),(0,'1')]:
             seek(progress)
             expect(stage).to_have_attribute('data-chapter',chapter)
@@ -51,6 +63,7 @@ def verify(base):
                 assert float(stage.get_attribute('data-flow'))>.99
                 assert abs(stage.bounding_box()['y'])<1
                 assert_cap_visible()
+                assert_bottle_visible()
                 page.screenshot(path=str(output/'cinematic-pour.png'))
         # The cap must clear the threads before any sideways travel.
         for progress in [.43,.46,.49,.505,.518,.53,.54,.55,.53,.505,.49,.43]:
@@ -84,6 +97,11 @@ def verify(base):
         page.get_by_role('button',name='Reset view').focus()
         page.get_by_role('button',name='Reset view').press('Space')
         page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)===0')
+        for _ in range(12):canvas.press('ArrowRight')
+        page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)>179')
+        page.screenshot(path=str(output/'bottle-back-packaging.png'))
+        assert_bottle_visible()
+        canvas.press('Home')
         canvas.press('ArrowRight')
         page.wait_for_function('Number(document.querySelector(".story-stage").dataset.rotation)>0')
         canvas.press('Home')
@@ -94,9 +112,10 @@ def verify(base):
         # Short desktop screens reproduce the original cap/nav collision.
         for width,height in [(1440,720),(1024,650),(1920,1080)]:
             page.set_viewport_size({'width':width,'height':height})
-            for progress in [.33,.55,.76]:
+            for progress in [.33,.43,.49,.55,.64,.67,.76,.88,.99]:
                 seek(progress)
                 assert_cap_visible()
+                assert_bottle_visible()
         page.set_viewport_size({'width':1440,'height':1000})
         seek(0)
         page.get_by_role('button',name='Pause 3D animation').focus()
@@ -116,6 +135,7 @@ def verify(base):
             seek(.76)
             assert float(stage.get_attribute('data-flow'))>.99
             assert_cap_visible()
+            assert_bottle_visible()
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
         page.set_viewport_size({'width':390,'height':844})
         seek(.76)
@@ -173,7 +193,7 @@ def verify(base):
         touch.close()
         assert not errors,errors
         assert not bad,bad
-        print('PASS: Full-screen water opening, single logo, transparent-to-white fixed header, staged axial cap opening/reverse closing, cap framing at short viewports, right-drag 360°, touch rotation, native vertical scroll, 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
+        print('PASS: Leaf wordmark, exclusive chapter transitions, full-bottle framing, front/back packaging, full-screen water opening, single logo, transparent-to-white fixed header, staged axial cap opening/reverse closing, cap framing at short viewports, right-drag 360°, touch rotation, native vertical scroll, 3D opening/pouring/reverse scroll, pause/resume, 6 pages, page metadata, mobile menu, 4 viewport sizes, contact links, enquiry prefills, values and reduced motion; no JS/HTTP errors.')
         browser.close()
 if __name__=='__main__':
     if len(sys.argv)>1:verify(sys.argv[1].rstrip('/'))

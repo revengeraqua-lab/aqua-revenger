@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import { createBottleFraming } from './bottle-framing.js';
 import { createCapMotion } from './cap-motion.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
-import { makeBottle } from './bottle-3d.js?v=2';
+import { makeBottle } from './bottle-3d.js?v=3';
 import { makeWater } from './water-3d.js';
 import { createBrandWorld } from './brand-world.js?v=3';
 import { attachBottleRotation } from './bottle-viewer.js';
@@ -43,6 +44,7 @@ function reportCapBounds(){
 let paused=document.body.classList.contains('motion-paused');
 const mouth=new THREE.Vector3();
 const updateCap=createCapMotion();
+const fitBottle=createBottleFraming();
 
 function measure() {
   mobile=innerWidth<=900;
@@ -63,7 +65,13 @@ function requestFrame(){if(!frame&&!document.hidden)frame=requestAnimationFrame(
 function updateText(p) {
   const boundaries=[0,.22,.43,.64,.88,1];
   const index=p<.22?0:p<.43?1:p<.64?2:p<.88?3:4;
-  copies.forEach((copy,i)=>{const alpha=(i===0?1:phase(p,boundaries[i]-.025,boundaries[i]+.025))*(i===4?1:1-phase(p,boundaries[i+1]-.025,boundaries[i+1]+.025));copy.style.opacity=alpha;copy.style.visibility=alpha>.001?"visible":"hidden";copy.style.transform=`translateY(${(1-alpha)*(p>boundaries[i]? -20:24)}px)`;});
+  // Fade out completely before the next chapter fades in. Never stack
+  // two large headings in the same screen position, even on reverse scroll.
+  copies.forEach((copy,i)=>{
+    const alpha=i!==index?0:(i===0?1:phase(p,boundaries[i],boundaries[i]+.014))*(i===4?1:1-phase(p,boundaries[i+1]-.014,boundaries[i+1]));
+    copy.style.opacity=alpha;copy.style.visibility=alpha>.001?'visible':'hidden';
+    copy.style.transform=`translateY(${(1-alpha)*(p>(boundaries[i]+boundaries[i+1])/2?-12:14)}px)`;
+  });
   if(index!==activeCopy){
     copies.forEach((copy,i)=>{copy.classList.toggle('is-active',i===index);copy.setAttribute('aria-hidden',String(i!==index));for(const link of copy.querySelectorAll('a,button'))link.tabIndex=i===index?0:-1;});
     activeCopy=index;stage.dataset.chapter=String(index+1);
@@ -118,6 +126,14 @@ function render(now=0) {
     if(rotation)model.bottle.quaternion.multiply(inspectionQuaternion.setFromAxisAngle(localY,rotation.angle));
     stage.dataset.rotation=(rotation?THREE.MathUtils.radToDeg(rotation.angle):0).toFixed(2);
     if(rotation)rotation.sync(state.arrival>.95 && Boolean(renderer));
+    camera.position.x=still?0:pointerX*.02;
+    camera.position.y=still?0:pointerY*.02;camera.lookAt(0,0,0);camera.updateMatrixWorld();
+    if(state.arrival>.95) {
+      const b=fitBottle({bottle:model.bottle,viewCamera:camera,width:stage.clientWidth,height:stage.clientHeight,headerBottom,mobile,open});
+      scale=model.bottle.scale.x;
+      stage.dataset.bottleLeft=b.left.toFixed(1);stage.dataset.bottleRight=b.right.toFixed(1);
+      stage.dataset.bottleTop=b.top.toFixed(1);stage.dataset.bottleBottom=b.bottom.toFixed(1);
+    }
     model.liquid.scale.y=1-state.fill*.06;
     model.bottle.updateWorldMatrix(true,true);
     model.cap.visible=state.arrival>.002;

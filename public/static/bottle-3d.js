@@ -36,6 +36,8 @@ export function makeBottle(environment) {
   detailTexture.colorSpace=THREE.SRGBColorSpace;detailTexture.anisotropy=4;
   const detail=new THREE.Mesh(detailGeometry,new THREE.MeshBasicMaterial({map:detailTexture,transparent:true,opacity:.73,alphaTest:.02,depthWrite:false}));
   detail.renderOrder=5;bottle.add(detail);
+  // Continue the same wet-PET artwork around the rear inspection angle.
+  const rearDetail=detail.clone();rearDetail.rotation.y=Math.PI;bottle.add(rearDetail);
 
   // The rounded PET foot and the five molded lobes catch the studio lights.
   for(let i=0;i<5;i++) {
@@ -64,8 +66,15 @@ export function makeBottle(environment) {
   labelTexture.colorSpace=THREE.SRGBColorSpace;
   labelTexture.repeat.set(.397,.226);labelTexture.offset.set(.302,.374);
   labelTexture.anisotropy=4;
-  const label=new THREE.Mesh(new THREE.CylinderGeometry(.724,.724,1.24,64,1,true,-1.22,2.44),new THREE.MeshStandardMaterial({map:labelTexture,roughness:.34,metalness:.12,envMap:environment,envMapIntensity:.75}));
-  label.position.y=-.045;bottle.add(label);
+  // Two complementary half-wraps use the existing packaging artwork.
+  // The back is printed too; no fabricated ingredients or regulatory copy.
+  const labelGeometry=new THREE.CylinderGeometry(.724,.724,1.24,64,1,true,-Math.PI/2,Math.PI);
+  const labelMaterial=new THREE.MeshStandardMaterial({map:labelTexture,roughness:.34,metalness:.12,envMap:environment,envMapIntensity:.75});
+  for(let side=0;side<2;side++) {
+    const label=new THREE.Mesh(labelGeometry,labelMaterial);
+    label.name=side?'Revenger back packaging':'Revenger front packaging';
+    label.position.y=-.045;label.rotation.y=side*Math.PI;bottle.add(label);
+  }
   for(const y of [-.695,.605]) {
     const band=new THREE.Mesh(new THREE.CylinderGeometry(.723,.723,.022,96,1,true),gold);
     band.position.y=y;bottle.add(band);

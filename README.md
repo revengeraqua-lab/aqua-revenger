@@ -48,3 +48,6 @@ When the bottle is visible, hold the right or left mouse button on the scene and
 The cap opening is choreographed in `public/static/cap-motion.js`: continuous screw rotation with a matching axial rise, a separate vertical clearance lift, then a smooth arc to the parked position. Its orientation blend excludes the screw rotation so multiple turns remain continuous in either scroll direction. The cap has a modeled hollow underside, and the neck has continuous spiral thread geometry.
 
 The cinematic HUD (chapter numbers, progress labels, swipe instructions and visible pause/reset buttons) is visually removed. Pause and reset remain keyboard-focus controls; the canvas also supports Home to reset.
+
+
+The header and footer pair the wordmark with `public/static/images/leaf-mark.svg`, a vector interpretation of the packaging leaf emblem. Front and rear half-wrap label meshes repeat the same packaging artwork around the bottle, including the rear PET texture. No unconfirmed back-label specifications are invented. Chapter headings fade sequentially (out, then in) rather than crossfading on top of each other. `bottle-framing.js` projects the bottle bounds, reserves neck-release space, and fits them below navigation across viewport sizes and inspection angles.

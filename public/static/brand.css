@@ -6,3 +6,7 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.js-motion .reveal.pending{opacity:1;transform:none}}
 
 h1,h2,h3{overflow-wrap:anywhere}.split>*,.hero>*,.area-grid>*,.two-col>*,.contact-grid>*{min-width:0}
+
+/* The leaf emblem precedes the name, consistently across navigation/footer. */
+.wordmark{position:relative;padding-left:1.05em}
+.wordmark .brand-leaf{position:absolute;left:0;top:-.08em;width:.82em;height:1.15em;object-fit:contain}
