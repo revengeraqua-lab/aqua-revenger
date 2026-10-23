@@ -19,3 +19,16 @@
 @media(prefers-reduced-motion:reduce){.scroll-story{height:auto}.story-stage.hero{position:relative}.story-timeline,.motion-toggle{display:none}.story-bottom{justify-content:flex-start}.is-home .header{transition:none}}
 
 @media(max-width:900px){.story-copy[data-copy="4"] .story-detail{display:none}}
+
+/* Inspection controls sit outside the copy and preserve native page scrolling. */
+.story-stage.can-rotate .scene-canvas{pointer-events:auto}
+.scene-canvas canvas{touch-action:pan-y}
+.story-stage.can-rotate .scene-canvas canvas{cursor:grab}
+.story-stage.is-rotating .scene-canvas canvas{cursor:grabbing}
+.scene-canvas canvas:focus-visible{outline:2px solid #b8cb99;outline-offset:-5px}
+.bottle-controls{position:absolute;z-index:5;right:5%;bottom:100px;display:flex;align-items:center;gap:18px;color:var(--story-ink)}
+.bottle-controls .rotation-hint{font:10px var(--sans);letter-spacing:.5px;color:inherit;opacity:.7;margin:0}
+.rotation-reset{font:10px var(--sans);color:inherit;border:1px solid #849a7b66;background:transparent;padding:8px 12px;cursor:pointer}
+.bottle-controls [hidden]{display:none!important}.touch-hint{display:none}
+@media(pointer:coarse){.desktop-hint{display:none}.touch-hint{display:inline}}
+@media(max-width:900px){.bottle-controls{bottom:82px;right:7%;gap:10px}.bottle-controls .rotation-hint{font-size:8px}.rotation-reset{font-size:9px;padding:6px 9px}}

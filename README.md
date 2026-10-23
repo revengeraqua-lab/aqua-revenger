@@ -38,3 +38,8 @@ python tests/browser_check.py https://revenger-397n.vercel.app
 ```
 
 Browser verification uses the installed Chrome executable through Playwright in an isolated profile. It checks 3D rendering, scroll chapters, cap opening, pouring, reverse scroll, pause/resume, reduced motion, all pages, metadata, responsive widths, navigation and contact prefills. No email is sent.
+
+
+## Interactive bottle
+
+When the bottle is visible, hold the right or left mouse button on the scene and drag horizontally for a full 360-degree turn. On touch devices, swipe horizontally; vertical swipes still scroll the story. Focus the canvas and use Left/Right arrows to rotate, Home or the Reset view button to restore the view. The closed cap follows the bottle orientation; the detached cap is framed below the actual header height with a safety margin, including short desktop screens.

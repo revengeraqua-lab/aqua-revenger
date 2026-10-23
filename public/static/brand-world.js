@@ -31,8 +31,9 @@ export function createBrandWorld(scene,environment,sourceBottle,sourceCap) {
     scene.add(clone);lineup.push(clone);
   }
   const lightColor=new THREE.Color(0xf1f2e7),darkColor=new THREE.Color(0x063a2c);
+  const inspectionAxis=new THREE.Vector3(0,1,0),inspectionTurn=new THREE.Quaternion();
   let lastAspect=0;
-  function update(state,p,camera,mobile,mainPosition,time=0) {
+  function update(state,p,camera,mobile,mainPosition,time=0,inspectionAngle=0) {
     const halfH=Math.tan(camera.fov*Math.PI/360)*(camera.position.z+6);
     const width=halfH*2*camera.aspect;
     backdrop.scale.set(width,halfH*2,1);
@@ -57,6 +58,7 @@ export function createBrandWorld(scene,environment,sourceBottle,sourceCap) {
       b.position.set((mobile?mobilePositions[i]:desktopPositions[i])*fit,(mobile?-2.35:-2.20)+sizes[i]*2.35,(-.18-i*.04));
       b.position.y-=(1-state.lineup)*1.5;
       b.rotation.set(0,(i-1)*.10,(i-1)*-.045*state.lineup);
+      b.quaternion.multiply(inspectionTurn.setFromAxisAngle(inspectionAxis,inspectionAngle));
     });
   }
   return {update};
