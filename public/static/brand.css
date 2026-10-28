@@ -38,3 +38,17 @@ footer.footer-compact{padding:0 0 20px;border-top:2px solid #a68b4e}
 @media(max-width:1100px){.footer-compact .footer-main{gap:32px;grid-template-columns:1fr 1fr 1.2fr}.footer-compact .footer-nav-grid{gap:5px 15px}.footer-compact .footer-brand .wordmark{font-size:33px}}
 @media(max-width:800px){.footer-compact .footer-main{grid-template-columns:1fr 1fr;gap:24px 36px;padding-block:30px 24px}.footer-compact .footer-brand{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:36px;align-items:center}.footer-compact .footer-brand>p{margin:0}.footer-compact .footer-company{grid-column:1/-1;margin-top:10px}.footer-compact .footer-bottom{align-items:start;flex-direction:row;flex-wrap:wrap}.footer-compact .back-to-top{margin-left:auto}}
 @media(max-width:540px){.footer-compact .footer-main{grid-template-columns:1fr;gap:24px}.footer-compact .footer-brand{display:block;grid-column:auto}.footer-compact .footer-brand>p{margin-top:15px;font-size:11px}.footer-compact .footer-company{margin-top:8px;font-size:9px}.footer-compact .footer-nav-grid{gap:0 30px}.footer-compact .footer-links a{font-size:12px;padding:5px 0;min-height:30px}.footer-compact .footer-contact .footer-phone{font-size:22px}.footer-compact .footer-offices{grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}.footer-compact .footer-offices span:not(.office-arrow){display:block;margin-bottom:3px}.footer-compact .footer-bottom{font-size:8px;gap:12px}.footer-compact .footer-bottom .developer-credit{font-size:8px}.footer-compact .footer-main h3{margin-bottom:12px}.footer-compact .back-to-top{display:none}}
+
+/* Client-approved individual package designs: 500 ml and 1 litre water, plus 500 ml beverages. */
+.water-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:920px;margin-inline:auto}
+.product-photo{height:100%;width:100%;display:grid;place-items:end center;overflow:hidden;pointer-events:none}
+.product-photo img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 18px 18px #073d3018);transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+.range-card .product-photo{height:300px;padding:20px 30px 0}.range-card .product-photo img{max-height:280px}
+.catalogue-photo .product-photo{padding:22px 44px 0}.catalogue-photo .product-photo img{max-height:320px}
+.format-500ml .product-photo img{max-height:285px}.format-1l .product-photo img{max-height:320px}
+.beverage-card .catalogue-photo .product-photo{padding:22px 48px 0}.beverage-card .catalogue-photo .product-photo img{max-height:350px}
+.range-card:hover .product-photo img,.catalogue-card:hover .product-photo img{transform:translateY(-6px) scale(1.015)}
+@media(max-width:1100px){.range-card .product-photo{height:250px}.range-card .product-photo img{max-height:230px}}
+@media(max-width:800px){.range-card .product-photo{height:280px}.range-card .product-photo img{max-height:260px}.water-grid{max-width:none}.beverage-card .catalogue-photo .product-photo img{max-height:390px}}
+@media(max-width:540px){.range-card .product-photo{height:200px;padding:16px 15px 0}.range-card .product-photo img{max-height:185px}.catalogue-photo .product-photo{padding:16px 20px 0}.format-500ml .product-photo img{max-height:215px}.format-1l .product-photo img{max-height:245px}.beverage-card .catalogue-photo .product-photo{padding:18px 30px 0}.beverage-card .catalogue-photo .product-photo img{max-height:315px}}
+@media(prefers-reduced-motion:reduce){.range-card:hover .product-photo img,.catalogue-card:hover .product-photo img{transform:none}}

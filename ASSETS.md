@@ -53,3 +53,15 @@ Supplied and identified by the client for publication on the company page. Origi
 Final prompt:
 
 > Create a photorealistic product artwork sprite sheet for the Revenger beverages brand, using the attached bottle only as brand/packaging style reference. Wide landscape canvas 3:2 or 2:1. Exactly FOUR standalone complete CLOSED bottles arranged in four equally wide columns: column1 center x12.5% clear packaged drinking WATER, deep emerald green cap and emerald gold-trim label; column2 x37.5% crystal-clear carbonated SODA, muted silver gray cap and emerald/silver gold-trim label; column3 x62.5% light warm amber JEERA SODA, brown cap and dark amber/emerald gold-trim label with a small cumin botanical motif; column4 x87.5% very pale lemon yellow LEMON SODA, yellow cap and emerald/citrus gold-trim label with a small lemon illustration. All bottles exactly same tall slender realistic ribbed PET silhouette, SAME height and base alignment, front facing, evenly isolated. Each bottle must fit completely inside its own column with generous empty gutters; caps at y10%, bottoms at y92%, no overlap, no floating caps. Each label contains the same gold two-leaf emblem, exact large ivory italic word 'Revenger', and only the appropriate product name: 'PACKAGED DRINKING WATER', 'SODA', 'JEERA SODA', 'LEMON SODA'. Do not print any size, price, capacity, certification, barcode, nutrition or health claim. Realistic clear plastic optical reflections, fine condensation, elegant studio softbox illumination, commercial beverage product photograph quality, consistent emerald and gold premium brand family. Genuine TRANSPARENT background around every bottle. No scenery, no hands, no glasses, no fruit outside bottles, no large splash, no typography outside labels, no pedestal, no cast floor shadow. Important all 4 bottles must be separate and wholly within their equal quarter of the image so each column can be displayed individually on a website without altering pixels.
+
+## Client-supplied product packaging - 28 October 2026
+
+The client supplied five approved package reference images. The built-in `image_gen` background-extraction workflow removed only the surrounding scenery/background and preserved each bottle as an isolated transparent product-card asset. These files replace the earlier four-column concept sprite in the live catalogue:
+
+- `public/static/images/revenger-water-500ml.png` — 500 ml packaged drinking water.
+- `public/static/images/revenger-water-1l.png` — 1 litre packaged drinking water.
+- `public/static/images/revenger-soda-500ml.png` — 500 ml soda.
+- `public/static/images/revenger-jeera-soda-500ml.png` — 500 ml jeera soda.
+- `public/static/images/revenger-nimbu-soda-500ml.png` — 500 ml nimbu soda.
+
+Final background-extraction prompt pattern: “Edit only the specified supplied reference image. Remove the background and ground effects to genuine transparent alpha. Preserve the full bottle, proportions, cap, liquid, molded PET body, label artwork and visible package text exactly. Do not redesign, redraw, reinterpret or relabel.”

@@ -51,4 +51,8 @@ class BrandTests(unittest.TestCase):
             for city in cities:self.assertIn(city.encode(),areas)
         contact=self.client.get('/contact').data
         for text in ('GangaShreeroots@gmail.com','401202','212107','tel:+918169456633'):self.assertIn(text.encode(),contact)
+        products=self.client.get('/products').data.decode('utf-8-sig')
+        self.assertEqual(products.count('class="catalogue-card reveal format-'),2)
+        for text in ('500 ml','1 litre','revenger-water-500ml.png','revenger-water-1l.png','revenger-soda-500ml.png','revenger-jeera-soda-500ml.png','revenger-nimbu-soda-500ml.png'):self.assertIn(text,products)
+        for text in ('format-250ml','format-2l','250 ml','2 litres','revenger-drinks-collection.png'):self.assertNotIn(text,products)
 if __name__=='__main__':unittest.main()

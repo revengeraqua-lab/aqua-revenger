@@ -12,10 +12,8 @@ from storage import StorageUnavailable, save_enquiry
 
 BASE = Path(__file__).resolve().parent
 PRODUCTS = [
-    {"id": "250ml", "name": "The little refresh", "size": "250 ml", "pack": "24 bottles / case", "occasion": "Meetings, moments & little adventures", "bottles": 24},
-    {"id": "500ml", "name": "Your everyday companion", "size": "500 ml", "pack": "24 bottles / case", "occasion": "On the move. In your element.", "bottles": 24},
-    {"id": "1l", "name": "A little more life", "size": "1 litre", "pack": "12 bottles / case", "occasion": "For the long days and longer journeys", "bottles": 12},
-    {"id": "2l", "name": "Refresh, together", "size": "2 litres", "pack": "9 bottles / case", "occasion": "Made for the table. Shared with everyone.", "bottles": 9},
+    {"id": "500ml", "name": "Your everyday companion", "size": "500 ml", "occasion": "On the move. In your element.", "image": "images/revenger-water-500ml.png", "image_width": 1046, "image_height": 1503},
+    {"id": "1l", "name": "A little more life", "size": "1 litre", "occasion": "For the long days and longer journeys.", "image": "images/revenger-water-1l.png", "image_width": 1108, "image_height": 1420},
 ]
 
 
@@ -55,7 +53,7 @@ def create_app(database=None):
         return render_template("brand.html", key=key, page=page, pages=PAGES, company=COMPANY,
             phone=PHONE, email=EMAIL, regions=REGIONS, city_centres=CITY_CENTRES, offices=OFFICES, values=VALUES,
             portfolio=PORTFOLIO, water_formats=PRODUCTS, leaders=leaders, canonical=canonical,
-            share_image=origin + "/static/images/revenger-bottle-real.png",
+            share_image=origin + "/static/images/revenger-water-1l.png",
             schema={"@context": "https://schema.org", "@graph": graph},
             map_url=lambda office: "https://www.google.com/maps/search/?" + urlencode({"api": 1, "query": office["street"] + ", " + office["city"] + ", " + office["pin"]}))
 

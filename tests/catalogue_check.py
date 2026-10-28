@@ -25,9 +25,11 @@ def verify(base):
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(key,width)
     assert page.locator('footer').bounding_box()['height']<(640 if width<540 else 500 if width<1100 else 360),(key,width,'Footer too tall')
    if key=='products':
-    expect(page.locator('.water-grid .catalogue-card')).to_have_count(4)
+    expect(page.locator('.water-grid .catalogue-card')).to_have_count(2)
     expect(page.locator('.beverage-grid .catalogue-card')).to_have_count(3)
-    for photo in page.locator('.drink-photo img').all():
+    expect(page.locator('.format-250ml,.format-2l')).to_have_count(0)
+    expect(page.locator('.format-500ml,.format-1l')).to_have_count(2)
+    for photo in page.locator('.product-photo img').all():
      photo.scroll_into_view_if_needed();photo.evaluate('(e)=>e.decode()')
     assert '₹' not in page.locator('main').inner_text()
     assert 'Price on request' not in page.locator('main').inner_text()
@@ -49,6 +51,7 @@ def verify(base):
   card=page.locator('#jeera-soda');card.locator('input[name="quantity"]').fill('12')
   card.get_by_role('button',name='Enquire about jeera soda').click()
   expect(page.locator('#enquiry-product')).to_have_value('jeera-soda')
+  expect(page.locator('#enquiry-size')).to_have_value('500 ml')
   expect(page.locator('#enquiry-quantity')).to_have_value('12')
   page.goto(base+'/products',wait_until='networkidle');page.emulate_media(reduced_motion='reduce')
   page.screenshot(path='test-results/products-new-mobile.png',full_page=True)
@@ -58,7 +61,7 @@ def verify(base):
   assert not errors,errors
   assert not bad,bad
   browser.close()
-  print('PASS: 6 pages, footer credit, no top strip/prices, 7 product images, quantity bounds, enquiry prefills, mobile layout and reduced motion.')
+  print('PASS: 6 pages, footer credit, no top strip/prices, 2 water formats and 3 beverage package images, quantity bounds, enquiry prefills, mobile layout and reduced motion.')
 if __name__=='__main__':
  if len(sys.argv)>1:verify(sys.argv[1].rstrip('/'))
  else:

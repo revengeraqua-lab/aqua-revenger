@@ -20,7 +20,7 @@ These are content observations and design/SEO recommendations, not claims that a
 | --- | --- |
 | Home | Revenger water brand, packaged drinking water and beverages, Maharashtra, Uttar Pradesh |
 | Company | GangaShree Roots Private Limited, Revenger company, Subir Banerjee, Rakesh Salve |
-| Products | Revenger packaged drinking water, soda, jeera soda, lemon soda |
+| Products | Revenger packaged drinking water, soda, jeera soda, nimbu soda |
 | Values | Revenger quality commitment, trust, responsible manufacturing and growth |
 | Service areas | packaged drinking water brand in Prayagraj; water and beverage retail enquiries in Mumbai, Thane, Palghar; coverage in Jaunpur, Varanasi, Pratapgarh, Sultanpur, Ayodhya, Chitrakoot |
 | Contact | Revenger contact number; Vasai West head office; Prayagraj registered office |
@@ -46,7 +46,7 @@ Google ignores meta-keywords; target terms belong in useful visible copy, titles
 2. Verify ownership in Google Search Console, submit `/sitemap.xml`, inspect the six URLs and request indexing where appropriate. Indexing is not automatic or guaranteed.
 3. Create/complete eligible Google Business Profiles with consistent company name, real address, phone, categories and genuine business hours. Confirm whether customers can visit each office before publishing visiting hours or a storefront claim.
 4. Add original plant and actual product/label photography when provided. Current bottle and catalogue artwork are generated brand concepts, not verified label/specification photos; provenance is in `ASSETS.md`. Client-supplied leadership portraits were added on 23 October 2026.
-5. The client requested restoration of the existing 250 ml, 500 ml, 1 litre and 2 litre water formats for size/quantity enquiries. The company confirms final formats and local availability. No prices, case counts or unconfirmed beverage capacities are displayed. Confirm specifications, factory address and credentials before adding them. Avoid unsupported mineral-water, purity-test, spring-source or health claims.
+5. The client confirmed two packaged drinking water formats: 500 ml and 1 litre. Supplied soda, jeera soda and nimbu soda designs show 500 ml packaging. The company confirms local availability. No prices or case counts are displayed. Confirm specifications, factory address and credentials before adding them. Avoid unsupported mineral-water, purity-test, spring-source or health claims.
 6. Maintain business listings, earn authentic customer reviews and track city-level organic enquiries in Search Console. Do not buy reviews or publish duplicate city pages with swapped place names.
 
 Google explains local visibility in terms of relevance, distance and prominence, not title tags alone:
