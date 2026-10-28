@@ -65,3 +65,5 @@ The client supplied five approved package reference images. The built-in `image_
 - `public/static/images/revenger-nimbu-soda-500ml.png` — 500 ml nimbu soda.
 
 Final background-extraction prompt pattern: “Edit only the specified supplied reference image. Remove the background and ground effects to genuine transparent alpha. Preserve the full bottle, proportions, cap, liquid, molded PET body, label artwork and visible package text exactly. Do not redesign, redraw, reinterpret or relabel.”
+
+The cinematic Three.js bottle now uses `revenger-water-1l.png` for both the wet-PET surface detail and the wrapped front/rear label. Its separate modeled green cap, neck threads and water remain geometry so scroll-driven cap opening, pouring and 360-degree inspection continue to work with the approved 1 litre package design. The non-WebGL fallback uses the same 1 litre bottle asset.

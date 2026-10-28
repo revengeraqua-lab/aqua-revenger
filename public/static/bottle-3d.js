@@ -29,10 +29,11 @@ export function makeBottle(environment) {
   const uv=detailGeometry.attributes.uv;
   for(let i=0;i<positions.count;i++) {
     const y=positions.getY(i);
-    const v=y>.605 ? .600+(y-.605)/1.735*.283 : y<-.695 ? .373+(y+.695)/1.585*.343 : .373+(y+.695)/1.30*.227;
+    // Match the approved 1 litre artwork: neck/shoulder, label and lower PET.
+    const v=y>.605 ? .658+(y-.605)/1.735*.242 : y<-.695 ? .366+(y+.695)/1.585*.346 : .366+(y+.695)/1.30*.292;
     uv.setXY(i,.5+positions.getX(i)*.285,v);
   }
-  const detailTexture=new THREE.TextureLoader().load('/static/images/revenger-bottle-real.png');
+  const detailTexture=new THREE.TextureLoader().load('/static/images/revenger-water-1l.png');
   detailTexture.colorSpace=THREE.SRGBColorSpace;detailTexture.anisotropy=4;
   const detail=new THREE.Mesh(detailGeometry,new THREE.MeshBasicMaterial({map:detailTexture,transparent:true,opacity:.73,alphaTest:.02,depthWrite:false}));
   detail.renderOrder=5;bottle.add(detail);
@@ -62,9 +63,9 @@ export function makeBottle(environment) {
 
   const labelBack=new THREE.Mesh(new THREE.CylinderGeometry(.719,.719,1.28,96,1,true),emerald);
   labelBack.position.y=-.045;bottle.add(labelBack);
-  const labelTexture=new THREE.TextureLoader().load('/static/images/revenger-bottle-real.png');
+  const labelTexture=new THREE.TextureLoader().load('/static/images/revenger-water-1l.png');
   labelTexture.colorSpace=THREE.SRGBColorSpace;
-  labelTexture.repeat.set(.397,.226);labelTexture.offset.set(.302,.374);
+  labelTexture.repeat.set(.42,.292);labelTexture.offset.set(.29,.366);
   labelTexture.anisotropy=4;
   // Two complementary half-wraps use the existing packaging artwork.
   // The back is printed too; no fabricated ingredients or regulatory copy.

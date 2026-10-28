@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { createBottleFraming } from './bottle-framing.js';
 import { createCapMotion } from './cap-motion.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
-import { makeBottle } from './bottle-3d.js?v=3';
+import { makeBottle } from './bottle-3d.js?v=4';
 import { makeWater } from './water-3d.js';
 import { createBrandWorld } from './brand-world.js?v=3';
 import { attachBottleRotation } from './bottle-viewer.js';

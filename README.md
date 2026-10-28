@@ -56,7 +56,7 @@ The cap opening is choreographed in `public/static/cap-motion.js`: continuous sc
 The cinematic HUD (chapter numbers, progress labels, swipe instructions and visible pause/reset buttons) is visually removed. Pause and reset remain keyboard-focus controls; the canvas also supports Home to reset.
 
 
-The header and footer pair the wordmark with `public/static/images/leaf-mark.svg`, a vector interpretation of the packaging leaf emblem. Front and rear half-wrap label meshes repeat the same packaging artwork around the bottle, including the rear PET texture. No unconfirmed back-label specifications are invented. Chapter headings fade sequentially (out, then in) rather than crossfading on top of each other. `bottle-framing.js` projects the bottle bounds, reserves neck-release space, and fits them below navigation across viewport sizes and inspection angles.
+The header and footer pair the wordmark with `public/static/images/leaf-mark.svg`, a vector interpretation of the packaging leaf emblem. The cinematic bottle maps the client-approved 1 litre package image onto the modeled PET body and complementary front/rear label meshes. No unconfirmed back-label specifications are invented. Chapter headings fade sequentially (out, then in) rather than crossfading on top of each other. `bottle-framing.js` projects the bottle bounds, reserves neck-release space, and fits them below navigation across viewport sizes and inspection angles.
 
 ## Interactive service globe
 

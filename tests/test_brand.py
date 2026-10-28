@@ -55,4 +55,7 @@ class BrandTests(unittest.TestCase):
         self.assertEqual(products.count('class="catalogue-card reveal format-'),2)
         for text in ('500 ml','1 litre','revenger-water-500ml.png','revenger-water-1l.png','revenger-soda-500ml.png','revenger-jeera-soda-500ml.png','revenger-nimbu-soda-500ml.png'):self.assertIn(text,products)
         for text in ('format-250ml','format-2l','250 ml','2 litres','revenger-drinks-collection.png'):self.assertNotIn(text,products)
+        home=self.client.get('/').data.decode('utf-8-sig')
+        self.assertIn('/static/images/revenger-water-1l.png',home)
+        self.assertNotIn('/static/images/revenger-bottle-real.png',home)
 if __name__=='__main__':unittest.main()
