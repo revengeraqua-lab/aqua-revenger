@@ -7,14 +7,14 @@
 <meta name="theme-color" content="#073d30"><link rel="canonical" href="{{ canonical }}">
 <meta property="og:type" content="website"><meta property="og:locale" content="en_IN"><meta property="og:site_name" content="Revenger"><meta property="og:title" content="{{ page.title }}"><meta property="og:description" content="{{ page.description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:image" content="{{ share_image }}"><meta property="og:image:alt" content="Revenger packaged drinking water brand artwork">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{ page.title }}"><meta name="twitter:description" content="{{ page.description }}"><meta name="twitter:image" content="{{ share_image }}">
-<link rel="icon" type="image/jpeg" href="/static/images/revenger-brand-logo.jpeg"><link rel="shortcut icon" type="image/jpeg" href="/static/images/revenger-brand-logo.jpeg"><link rel="stylesheet" href="/static/fonts/fonts.css"><link rel="stylesheet" href="/static/brand.css?v=13"><script src="/static/brand.js?v=7" defer></script>
+<link rel="icon" type="image/webp" href="/static/images/revenger-brand-logo.webp"><link rel="shortcut icon" type="image/webp" href="/static/images/revenger-brand-logo.webp"><link rel="stylesheet" href="/static/fonts/fonts.css"><link rel="stylesheet" href="/static/brand.css?v=14"><script src="/static/brand.js?v=7" defer></script>
 {% if key == 'home' %}<link rel="preload" as="image" href="/static/images/hero-water.png"><link rel="stylesheet" href="/static/cinematic.css?v=5"><link rel="stylesheet" href="/static/service-globe.css?v=2"><script type="importmap">{"imports":{"three":"/static/vendor/three/three.module.js"}}</script><script type="module" src="/static/scroll-story.js?v=10"></script>{% endif %}
 <script type="application/ld+json">{{ schema|tojson }}</script>
 </head>
 <body{% if key == 'home' %} class="is-home"{% endif %}>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="header wrap"><a class="wordmark" href="/" aria-label="Revenger home"><img class="brand-logo" src="/static/images/revenger-brand-logo.jpeg" alt="Revenger brand logo" width="1536" height="1024"></a><button class="menu-toggle" aria-controls="navigation" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button><nav id="navigation" aria-label="Main navigation">{% for id, p in pages.items() %}<a href="{{ p.path }}" {% if id == 'contact' %}class="nav-contact"{% endif %} {% if id == key %}aria-current="page"{% endif %}>{{ p.label }}</a>{% endfor %}</nav></header>
+<header class="header wrap"><a class="wordmark" href="/" aria-label="Revenger home"><img class="brand-logo" src="/static/images/revenger-brand-logo.webp" alt="Revenger brand logo" width="1500" height="913"></a><button class="menu-toggle" aria-controls="navigation" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button><nav id="navigation" aria-label="Main navigation">{% for id, p in pages.items() %}<a href="{{ p.path }}" {% if id == 'contact' %}class="nav-contact"{% endif %} {% if id == key %}aria-current="page"{% endif %}>{{ p.label }}</a>{% endfor %}</nav></header>
 <main id="main">
 {% if key == 'home' %}
 {% include 'cinematic.html' %}
