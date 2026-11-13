@@ -1,6 +1,6 @@
 <footer class="brand-footer footer-compact">
  <div class="wrap footer-main">
-  <div class="footer-brand"><a class="wordmark" href="/" aria-label="Revenger home"><img class="brand-logo" src="/static/images/revenger-brand-logo.jpeg" alt="Revenger brand logo" width="1536" height="1024"></a><p>Pure by Nature. Driven by Trust.<br>Committed to Quality.</p><span class="footer-company">{{ company }}</span></div>
+  <div class="footer-brand"><a class="wordmark" href="/" aria-label="Revenger home"><img class="brand-logo" src="/static/images/revenger-brand-logo.webp" alt="Revenger brand logo" width="1505" height="928"></a><p>Pure by Nature. Driven by Trust.<br>Committed to Quality.</p><span class="footer-company">{{ company }}</span></div>
   <nav class="footer-links" aria-label="Footer navigation"><h3>Explore Revenger</h3><div class="footer-nav-grid">{% for id,p in pages.items() %}<a href="{{ p.path }}">{{ p.label }} <span aria-hidden="true">&#8599;</span></a>{% endfor %}</div></nav>
   <div class="footer-contact"><h3>Let's connect</h3><a class="footer-phone" href="tel:+918169456633">{{ phone }}</a><a href="mailto:{{ email }}">{{ email }}</a><div class="footer-offices">{% for office in offices %}<a href="{{ map_url(office) }}" target="_blank" rel="noopener noreferrer"><span>{{ office.name }}</span>{{ office.city }} <span class="office-arrow" aria-hidden="true">&#8599;</span></a>{% endfor %}</div></div>
  </div>
