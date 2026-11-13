@@ -36,7 +36,7 @@ def create_app(database=None):
         organization = {
             "@type": "Organization", "@id": origin + "/#organization",
             "name": COMPANY, "url": origin, "email": EMAIL,
-            "telephone": "+918169456633", "brand": {"@type": "Brand", "name": "Revenger"},
+            "telephone": "+918169456633", "brand": {"@type": "Brand", "name": "Revenger", "logo": origin + "/static/images/revenger-brand-logo.jpeg"},
             "address": [{"@type": "PostalAddress", "streetAddress": o["street"], "addressLocality": o["city"], "addressRegion": o["state"], "postalCode": o["pin"], "addressCountry": "IN"} for o in OFFICES],
             "areaServed": [{"@type": "AdministrativeArea", "name": city} for cities in REGIONS.values() for city in cities],
             "employee": [{"@type": "Person", "name": l["name"], "jobTitle": l["role"]} for l in LEADERS],
